@@ -15,6 +15,12 @@ namespace ld {
 			return TILE_SIZE * ROWS;
 		}
 	}
+
+	// TODO: move this out
+    enum class Faction {
+                            Skeleton,
+    };
+
 }
 
 
