@@ -23,6 +23,7 @@ Install dependencies on Ubuntu:
 
 https://opengameart.org/content/medieval-rts-120 by Kenney (public domain)
 https://opengameart.org/content/lpc-medieval-fantasy-character-sprites by wulax (CC-BY-SA 3.0 GPL 3.0)
+https://opengameart.org/content/crosshair-pack-200%C3%97 by Kenney (public domain)
 
 ## Screenshots
 
