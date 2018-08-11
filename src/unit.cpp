@@ -2,7 +2,7 @@
 
 namespace ld {
 
-Unit::Unit(const sf::Texture &texture, ld::UnitFaction unit_faction,
+Unit::Unit(const sf::Texture &texture, ld::Faction unit_faction,
            ld::UnitType unit_type)
     : sprite(texture), unit_type_(unit_type), unit_faction_(unit_faction), selected_(false) {}
 
@@ -20,7 +20,7 @@ std::shared_ptr<ld::Unit>
 Unit::build_armored_skeleton(const ld::Resources &resources) {
     std::shared_ptr<ld::Unit> unit = std::make_shared<ld::Unit>(
         resources.get_texture("skeleton_armored_right.png"),
-        ld::UnitFaction::Skeleton, ld::UnitType::Armored);
+        ld::Faction::Skeleton, ld::UnitType::Armored);
 
     unit->set_strength(10);
 
