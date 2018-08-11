@@ -14,6 +14,16 @@ void Resources::load() {
 
         textures[filename] = std::move(tex);
     }
+
+    for (const std::string &filename : files) {
+        std::unique_ptr<sf::Texture> tex = std::make_unique<sf::Texture>();
+
+        if (!tex->loadFromFile("assets/" + filename)) {
+            throw std::runtime_error("Unable to load " + filename);
+        }
+
+        textures[filename] = std::move(tex);
+    }
 }
 
 const sf::Texture &Resources::get_texture(const std::string &filename) const {

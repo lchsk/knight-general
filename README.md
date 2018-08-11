@@ -19,6 +19,11 @@ Install dependencies on Ubuntu:
 4. make -j
 ```
 
+## Assets
+
+https://opengameart.org/content/medieval-rts-120 by Kenney (public domain)
+https://opengameart.org/content/lpc-medieval-fantasy-character-sprites by wulax (CC-BY-SA 3.0 GPL 3.0)
+
 ## Screenshots
 
 11/08/2018 14:56 BST - basic map

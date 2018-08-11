@@ -4,6 +4,11 @@ namespace ld {
 
 Map::Map(const ld::MapDefinition &map_definition,
          const ld::Resources &resources) {
+
+    auto unit_1 = ld::Unit::build_armored_skeleton(resources);
+
+    units.push_back(unit_1);
+
     for (unsigned row = 0; row < 10; row++) {
         for (unsigned col = 0; col < 13; col++) {
             unsigned tile_id = map_definition[row][col];
@@ -24,6 +29,10 @@ Map::Map(const ld::MapDefinition &map_definition,
 void Map::render(sf::RenderWindow &window) const {
     for (const auto &tile : tiles) {
         window.draw(tile.sprite);
+    }
+
+    for (const auto &unit : units) {
+        window.draw(unit->sprite);
     }
 }
 }

@@ -10,8 +10,24 @@
 
 namespace ld {
 const std::vector<ld::TileConfig> TILES = {
-    TileConfig("grass_1.png"), TileConfig("earth_1.png"),
+    TileConfig("grass_1.png"), // 0
+    TileConfig("grass_2.png"), // 1
+
+    TileConfig("earth_1.png"), // 2
+    TileConfig("earth_2.png"), // 3
+
+    TileConfig("water_1.png"), // 4
+    TileConfig("water_2.png"), // 5
+
+    TileConfig("light_water_1.png"), // 6
+    TileConfig("light_water_2.png"), // 7
+
+    TileConfig("light_earth_1.png"), TileConfig("light_earth_2.png"),
+
+    TileConfig("purple_1.png"),      TileConfig("purple_2.png"),
 };
+
+const std::vector<std::string> files = {"skeleton_armored_right.png"};
 
 class Resources {
 
