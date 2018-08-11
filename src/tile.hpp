@@ -8,11 +8,13 @@
 namespace ld {
 class Tile {
   public:
-    Tile(const sf::Texture &texture, const unsigned row, const unsigned col);
+    Tile(const sf::Texture &texture, int, int);
 
     sf::Sprite sprite;
 
     std::shared_ptr<ld::Unit> unit_;
+
+    int row_, col_;
 
   private:
 };

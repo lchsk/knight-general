@@ -3,8 +3,8 @@
 
 namespace ld {
 
-Tile::Tile(const sf::Texture &texture, const unsigned row, const unsigned col)
-    : sprite(texture), unit_(nullptr) {
-    sprite.setPosition(row * ld::config::TILE_SIZE, col * ld::config::TILE_SIZE);
+Tile::Tile(const sf::Texture &texture, int row, int col)
+    : sprite(texture), unit_(nullptr), row_(row), col_(col) {
+    sprite.setPosition(col * ld::config::TILE_SIZE, row * ld::config::TILE_SIZE);
 }
 }
