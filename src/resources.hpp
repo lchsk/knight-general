@@ -27,7 +27,10 @@ const std::vector<ld::TileConfig> TILES = {
     TileConfig("purple_1.png"),      TileConfig("purple_2.png"),
 };
 
-const std::vector<std::string> files = {"skeleton_armored_right.png"};
+const std::vector<std::string> files = {
+                                        "skeleton_armored_right.png",
+                                        "crosshair.png",
+};
 
 class Resources {
 

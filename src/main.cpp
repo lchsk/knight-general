@@ -8,16 +8,17 @@
 #include "map.hpp"
 #include "resources.hpp"
 #include "tile.hpp"
+#include "config.hpp"
 
 void update(const sf::Time &delta) {}
 
-void render(sf::RenderWindow &window, const ld::Map &map) {
+void render(sf::RenderWindow &window, const ld::Map& map) {
     window.clear();
     map.render(window);
     window.display();
 }
 
-void handle_events(sf::RenderWindow &window) {
+void handle_events(sf::RenderWindow &window, ld::Map& map) {
     sf::Event event;
 
     while (window.pollEvent(event)) {
@@ -26,6 +27,7 @@ void handle_events(sf::RenderWindow &window) {
         if (event.type == sf::Event::Closed)
             window.close();
         else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            map.handle_left_mouse_click(pos);
         } else if (event.type == sf::Event::KeyPressed and
                    event.key.code == sf::Keyboard::Escape) {
             window.close();
@@ -34,7 +36,7 @@ void handle_events(sf::RenderWindow &window) {
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(832, 640), "knights");
+    sf::RenderWindow window(sf::VideoMode(ld::config::get_screen_width(), ld::config::get_screen_height()), "knights");
 
     sf::Time per_frame = sf::seconds(1.0f / 60.0f);
     sf::Clock clock;
@@ -49,7 +51,7 @@ int main() {
         sf::Time delta = clock.getElapsedTime() - last_update;
 
         if (delta > per_frame) {
-            handle_events(window);
+            handle_events(window, map);
             update(delta);
             render(window, map);
             last_update = clock.getElapsedTime();

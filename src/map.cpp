@@ -1,4 +1,5 @@
 #include "map.hpp"
+#include "config.hpp"
 
 namespace ld {
 
@@ -9,8 +10,11 @@ Map::Map(const ld::MapDefinition &map_definition,
 
     units.push_back(unit_1);
 
-    for (unsigned row = 0; row < 10; row++) {
-        for (unsigned col = 0; col < 13; col++) {
+    const sf::Texture& texture_crosshair = resources.get_texture("crosshair.png");
+    crosshair = sf::Sprite(texture_crosshair);
+
+    for (unsigned row = 0; row < ld::config::ROWS; row++) {
+        for (unsigned col = 0; col < ld::config::COLS; col++) {
             unsigned tile_id = map_definition[row][col];
             const ld::TileConfig &tc = TILES[tile_id];
 
@@ -24,6 +28,8 @@ Map::Map(const ld::MapDefinition &map_definition,
             }
         }
     }
+
+	tiles[0].unit_ = unit_1;
 };
 
 void Map::render(sf::RenderWindow &window) const {
@@ -33,6 +39,28 @@ void Map::render(sf::RenderWindow &window) const {
 
     for (const auto &unit : units) {
         window.draw(unit->sprite);
+
+        if (unit->selected_) {
+            window.draw(crosshair);
+        }
     }
 }
+
+    void Map::handle_left_mouse_click(const sf::Vector2i& pos)
+    {
+        int tile_col = static_cast<double>(pos.x) / ld::config::get_screen_width() * ld::config::COLS;
+        int tile_row = static_cast<double>(pos.y) / ld::config::get_screen_height() * ld::config::ROWS;
+
+        const auto& tile = tiles[tile_row * ld::config::COLS + tile_col];
+
+        if (tile.unit_ == nullptr) {
+            for (const auto& unit : units) {
+                unit->selected_ = false;
+                crosshair.setPosition(unit->sprite.getPosition());
+            }
+        } else {
+            tile.unit_->selected_ = true;
+        }
+
+    }
 }

@@ -24,20 +24,21 @@ class Unit {
 
     void render(sf::RenderWindow &window) const;
 
+    void set_strength(int strength);
+    int get_strength(int strength) const;
+
     sf::Sprite sprite;
+    bool selected_;
 
     static std::shared_ptr<ld::Unit>
-    build_armored_skeleton(const ld::Resources &resources) {
-        std::shared_ptr<ld::Unit> unit = std::make_shared<ld::Unit>(
-            resources.get_texture("skeleton_armored_right.png"),
-            ld::UnitFaction::Skeleton, ld::UnitType::Armored);
-
-        return unit;
-    }
+    build_armored_skeleton(const ld::Resources &resources);
 
   private:
     const ld::UnitFaction unit_faction_;
     const ld::UnitType unit_type_;
+
+    int strength_;
+
 };
 }
 
