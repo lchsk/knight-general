@@ -12,7 +12,8 @@ namespace ld {
 
 class Button {
   public:
-    Button(const std::shared_ptr<ld::Resources> &resources, bool enabled);
+    Button(const std::shared_ptr<ld::Resources> &resources,
+           const std::string &resource_name, bool enabled);
 
     void render(sf::RenderWindow &window) const;
 
@@ -36,6 +37,7 @@ class Gui {
 
     const std::shared_ptr<ld::Resources> resources_;
     ld::Button panel_turn;
+    ld::Button button_turn;
 
   private:
     void set_positions();
