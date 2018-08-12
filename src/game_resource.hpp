@@ -28,6 +28,8 @@ class GameResource {
 
     void render(sf::RenderWindow &window) const;
 
+    int get_resource_payout() const;
+
     sf::Sprite sprite_;
 
     static std::shared_ptr<ld::GameResource>

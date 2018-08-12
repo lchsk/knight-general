@@ -99,6 +99,10 @@ void Map::switch_players() {
     if (random == 0)
         add_game_resource();
 
+    update_gui();
+}
+
+void Map::update_gui() {
     gui_.update(player_1_, player_2_,
                 active_player_->player_type_ == ld::PlayerType::Human);
 }
@@ -172,14 +176,13 @@ void Map::add_game_resource() {
     }
 }
 
-void Map::land_payout() const {
-    int payout = 0;
-
+void Map::update_active_player_tiles() {
+    int tiles_owned = 0;
     int all_tiles = 0;
 
     for (const auto &tile : tiles) {
         if (tile.get_type() == active_player_->tile_type_) {
-            payout++;
+            tiles_owned++;
         }
 
         if (tile.get_type() != ld::TileType::Water) {
@@ -187,9 +190,14 @@ void Map::land_payout() const {
         }
     }
 
-    active_player_->coins_ += payout;
-    active_player_->tiles_ = payout;
+    active_player_->tiles_ = tiles_owned;
     active_player_->all_tiles_ = all_tiles;
+}
+
+void Map::land_payout() {
+
+    update_active_player_tiles();
+    active_player_->coins_ += std::ceil(active_player_->tiles_ / 4);
 }
 
 void Map::play_ai() {}
@@ -219,6 +227,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
     if (player_1_->selected_unit_ and
         player_1_->selected_unit_->can_fight(selected_tile.unit_)) {
+        // Fight
         ld::Tile *unit_tile = find_unit_tile(player_1_->selected_unit_);
 
         if (is_valid_move(selected_tile, unit_tile)) {
@@ -228,6 +237,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
     } else if (!selected_tile.unit_) {
         // There's no unit on selected tile => Move
         if (player_1_->selected_unit_) {
+            // Move to a new tile
             ld::Tile *unit_tile = find_unit_tile(player_1_->selected_unit_);
 
             if (!unit_tile) {
@@ -251,6 +261,13 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                     }
                 }
 
+                // Check if there's a resource on this tile
+                if (selected_tile.game_resource_) {
+                    player_1_->coins_ +=
+                        selected_tile.game_resource_->get_resource_payout();
+                    selected_tile.game_resource_ = nullptr;
+                }
+
                 selected_tile.sprite =
                     sf::Sprite(resources->get_texture(texture_name));
                 selected_tile.sprite.setPosition(pos);
@@ -258,6 +275,8 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                 player_1_->selected_unit_->already_moved_ = true;
                 player_1_->selected_unit_ = nullptr;
                 unit_tile->unit_ = nullptr;
+                update_active_player_tiles();
+                update_gui();
             } else {
                 std::cout << "Invalid move\n";
             }
