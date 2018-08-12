@@ -4,7 +4,8 @@
 namespace ld {
 
 Map::Map(const ld::MapDefinition &map_definition,
-         const ld::Resources &resources) {
+         const ld::Resources &resources)
+    : player_1_(std::make_shared<ld::Player>()){
 
     auto unit_1 = ld::Unit::build_armored_skeleton(resources);
 
@@ -21,7 +22,7 @@ Map::Map(const ld::MapDefinition &map_definition,
             try {
                 const sf::Texture &texture =
                     resources.get_texture(tc.get_filename());
-                tiles.push_back(ld::Tile(texture, col, row));
+                tiles.push_back(ld::Tile(texture, row, col));
             } catch (const std::out_of_range &) {
                 std::cout << "Filename " << tc.get_filename() << " not found"
                           << std::endl;
@@ -51,15 +52,52 @@ void Map::render(sf::RenderWindow &window) const {
         int tile_col = static_cast<double>(pos.x) / ld::config::get_screen_width() * ld::config::COLS;
         int tile_row = static_cast<double>(pos.y) / ld::config::get_screen_height() * ld::config::ROWS;
 
-        const auto& tile = tiles[tile_row * ld::config::COLS + tile_col];
+        // Tile that was just clicked on
+        auto& selected_tile = tiles[tile_row * ld::config::COLS + tile_col];
 
-        if (tile.unit_ == nullptr) {
-            for (const auto& unit : units) {
-                unit->selected_ = false;
-                crosshair.setPosition(unit->sprite.getPosition());
+        if (selected_tile.unit_ == nullptr) {
+            // There's no unit on selected tile => Move
+            if (player_1_->selected_unit_) {
+                bool valid_move = false;
+
+                ld::Tile* unit_tile = nullptr;
+
+                // Check if can move this unit
+                for (auto& tile : tiles) {
+                    if (tile.unit_ == player_1_->selected_unit_) {
+                        unit_tile = &tile;
+                        break;
+                    }
+                }
+
+                if (unit_tile == nullptr) {
+                    std::cout << "Could not find selected unit's tile\n";
+                    return;
+                }
+
+                const int row_diff = std::abs(selected_tile.row_ - unit_tile->row_);
+                const int col_diff = std::abs(selected_tile.col_ - unit_tile->col_);
+
+                if ((row_diff == 1 and col_diff == 0)
+                    or (row_diff == 0 and col_diff == 1)) {
+                    valid_move = true;
+                }
+
+                if (valid_move) {
+                    player_1_->selected_unit_->sprite.setPosition(selected_tile.sprite.getPosition());
+                    selected_tile.unit_ = player_1_->selected_unit_;
+                    player_1_->selected_unit_->selected_ = false;
+                    player_1_->selected_unit_ = nullptr;
+                    unit_tile->unit_ = nullptr;
+                } else {
+                    std::cout << "Invalid move\n";
+                }
             }
         } else {
-            tile.unit_->selected_ = true;
+            // Select a unit
+			crosshair.setPosition(selected_tile.unit_->sprite.getPosition());
+            selected_tile.unit_->selected_ = true;
+            player_1_->selected_unit_ = selected_tile.unit_;
         }
 
     }

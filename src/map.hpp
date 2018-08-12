@@ -7,6 +7,7 @@
 #include "tile.hpp"
 #include "tile_config.hpp"
 #include "unit.hpp"
+#include "player.hpp"
 
 namespace ld {
 using MapDefinition = std::array<std::array<unsigned, 13>, 10>;
@@ -40,6 +41,8 @@ class Map {
 
     // MOVE OUT OF MAP
     sf::Sprite crosshair;
+
+    std::shared_ptr<ld::Player> player_1_;
 
 };
 }
