@@ -81,6 +81,16 @@ void Map::clean_up_units() {
 }
 
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
+
+    ld::GuiAction action = gui_.handle_button_click(pos);
+
+    if (action == ld::GuiAction::EndTurn) {
+        active_player_ = active_player_ == player_1_ ? player_2_ : player_1_;
+        gui_.update(player_1_, player_2_,
+                    active_player_->player_type_ == ld::PlayerType::Human);
+        return;
+    }
+
     const int tile_col = ld::map_coords::px2tile_col(pos.x);
     const int tile_row = ld::map_coords::px2tile_row(pos.y);
 

@@ -1,5 +1,7 @@
 #include "gui.hpp"
 
+#include <iostream>
+
 namespace ld {
 
 Gui::Gui(const std::shared_ptr<ld::Resources> &resources)
@@ -40,6 +42,14 @@ void Gui::set_positions() {
         2 * margin + panel_turn.sprite_.getLocalBounds().height);
 }
 
+ld::GuiAction Gui::handle_button_click(const sf::Vector2i &pos) {
+    if (button_turn.check_click(pos)) {
+        return ld::GuiAction::EndTurn;
+    }
+
+    return ld::GuiAction::NoAction;
+}
+
 Button::Button(const std::shared_ptr<ld::Resources> &resources,
                const std::string &resource_name, bool enabled)
     : enabled_(enabled), visible_(true), resources_(resources) {
@@ -48,6 +58,18 @@ Button::Button(const std::shared_ptr<ld::Resources> &resources,
     label_.setFont(resources->basic_font_);
     label_.setCharacterSize(20);
     label_.setFillColor(sf::Color::White);
+}
+
+bool Button::check_click(const sf::Vector2i &pos) const {
+    if (!enabled_)
+        return false;
+
+    const auto &bounds_sprite = sprite_.getGlobalBounds();
+
+    return (pos.x >= bounds_sprite.left and
+            pos.x <= bounds_sprite.left + bounds_sprite.width and
+            pos.y >= bounds_sprite.top and
+            pos.y <= bounds_sprite.top + bounds_sprite.height);
 }
 
 void Button::set_text(const std::string &text) {

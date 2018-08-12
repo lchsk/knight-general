@@ -10,6 +10,11 @@
 
 namespace ld {
 
+enum class GuiAction {
+    NoAction,
+    EndTurn,
+};
+
 class Button {
   public:
     Button(const std::shared_ptr<ld::Resources> &resources,
@@ -18,6 +23,8 @@ class Button {
     void render(sf::RenderWindow &window) const;
 
     void set_text(const std::string &text);
+
+    bool check_click(const sf::Vector2i &pos) const;
 
     bool enabled_;
     bool visible_;
@@ -34,6 +41,8 @@ class Gui {
     void render(sf::RenderWindow &window) const;
     void update(std::shared_ptr<ld::Player> player_1,
                 std::shared_ptr<ld::Player> player_2, bool human_active);
+
+    ld::GuiAction handle_button_click(const sf::Vector2i &pos);
 
     const std::shared_ptr<ld::Resources> resources_;
     ld::Button panel_turn;
