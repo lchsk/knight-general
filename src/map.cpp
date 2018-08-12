@@ -18,15 +18,16 @@ Map::Map(const ld::MapDefinition &map_definition,
     for (unsigned row = 0; row < ld::config::ROWS; row++) {
         for (unsigned col = 0; col < ld::config::COLS; col++) {
             unsigned tile_id = map_definition[row][col];
-            const ld::TileConfig &tc = TILES[tile_id];
+            const ld::TileConfig &tile_config = TILES[tile_id];
 
             try {
                 const sf::Texture &texture =
-                    resources->get_texture(tc.get_filename());
-                tiles.push_back(ld::Tile(texture, tc.type_, row, col));
+                    resources->get_texture(tile_config.get_filename());
+                tiles.push_back(
+                    ld::Tile(texture, tile_config.get_type(), row, col));
             } catch (const std::out_of_range &) {
-                std::cout << "Filename " << tc.get_filename() << " not found"
-                          << std::endl;
+                std::cout << "Filename " << tile_config.get_filename()
+                          << " not found" << std::endl;
             }
         }
     }
@@ -79,13 +80,13 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                 player_1_->selected_unit_->sprite.setPosition(
                     selected_tile.sprite.getPosition());
                 selected_tile.unit_ = player_1_->selected_unit_;
-                selected_tile.type_ = player_1_->tile_type_;
+                selected_tile.set_type(player_1_->tile_type_);
                 const auto pos = selected_tile.sprite.getPosition();
 
                 std::string texture_name;
 
                 for (const auto &tile_config : TILES) {
-                    if (tile_config.type_ == player_1_->tile_type_) {
+                    if (tile_config.get_type() == player_1_->tile_type_) {
                         texture_name = tile_config.get_filename();
                         break;
                     }
@@ -114,7 +115,7 @@ bool Map::is_valid_move(const ld::Tile &selected_tile,
     const bool neighbor_tiles =
         ld::map_coords::neighbor_tiles(selected_tile, unit_tile);
 
-    return neighbor_tiles and selected_tile.type_ != ld::TileType::Water;
+    return neighbor_tiles and selected_tile.get_type() != ld::TileType::Water;
 }
 
 void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
@@ -137,7 +138,7 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
         auto &tile = tiles[id];
 
         // Add a unit on the random tile
-        if (tile.type_ == player->tile_type_ and tile.unit_ == nullptr) {
+        if (tile.get_type() == player->tile_type_ and tile.unit_ == nullptr) {
             auto unit =
                 ld::Unit::build_unit(*resources, player->faction_, unit_type);
             units.push_back(unit);

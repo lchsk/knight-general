@@ -11,11 +11,11 @@ class TileConfig {
     TileConfig(const std::string &filename, ld::TileType type);
 
     const std::string &get_filename() const;
-
-    const ld::TileType type_;
+    const ld::TileType get_type() const;
 
   private:
     const std::string filename_;
+    const ld::TileType type_;
 };
 }
 
