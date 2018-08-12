@@ -7,8 +7,8 @@ namespace ld {
 
 Unit::Unit(const sf::Texture &texture, ld::Faction unit_faction,
            ld::UnitType unit_type)
-    : sprite(texture), selected_(false), unit_faction_(unit_faction),
-      unit_type_(unit_type) {}
+    : sprite(texture), selected_(false), already_moved_(false),
+      unit_faction_(unit_faction), unit_type_(unit_type) {}
 
 void Unit::render(sf::RenderWindow &window) const { window.draw(sprite); }
 

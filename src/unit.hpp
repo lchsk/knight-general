@@ -34,6 +34,7 @@ class Unit {
 
     sf::Sprite sprite;
     bool selected_;
+    bool already_moved_;
 
     static std::shared_ptr<ld::Unit> build_unit(const ld::Resources &resources,
                                                 ld::Faction faction,

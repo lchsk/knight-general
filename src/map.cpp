@@ -84,8 +84,9 @@ void Map::clean_up_units() {
 }
 
 void Map::switch_players() {
-    // Unselect
+    // Reset
     for (auto &unit : units) {
+        unit->already_moved_ = false;
         unit->selected_ = false;
     }
 
@@ -254,6 +255,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                     sf::Sprite(resources->get_texture(texture_name));
                 selected_tile.sprite.setPosition(pos);
                 player_1_->selected_unit_->selected_ = false;
+                player_1_->selected_unit_->already_moved_ = true;
                 player_1_->selected_unit_ = nullptr;
                 unit_tile->unit_ = nullptr;
             } else {
@@ -262,7 +264,8 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
         }
     } else {
         // Select a unit
-        if (selected_tile.unit_->get_faction() == player_1_->faction_) {
+        if (!selected_tile.unit_->already_moved_ and
+            selected_tile.unit_->get_faction() == player_1_->faction_) {
             crosshair.setPosition(selected_tile.unit_->sprite.getPosition());
             selected_tile.unit_->selected_ = true;
             player_1_->selected_unit_ = selected_tile.unit_;
