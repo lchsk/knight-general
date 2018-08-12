@@ -191,6 +191,8 @@ void Map::land_payout() const {
     active_player_->all_tiles_ = all_tiles;
 }
 
+void Map::play_ai() {}
+
 bool Map::is_human_active() const { return active_player_ == player_1_; }
 
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
@@ -203,8 +205,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
     if (action == ld::GuiAction::EndTurn) {
         switch_players();
-        gui_.update(player_1_, player_2_,
-                    active_player_->player_type_ == ld::PlayerType::Human);
+        play_ai();
         return;
     }
 
@@ -308,5 +309,14 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
     }
 }
 
-void Map::update(const sf::Time &delta) {}
+void Map::update(const sf::Time &delta) {
+    if (active_player_->player_type_ == ld::PlayerType::AI) {
+        ai_timer_ += delta;
+
+        if (ai_timer_ > sf::seconds(ld::randint(3, 1))) {
+            ai_timer_ = sf::seconds(0);
+            switch_players();
+        }
+    }
+}
 }
