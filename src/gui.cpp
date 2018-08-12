@@ -6,6 +6,8 @@ namespace ld {
 
 Gui::Gui(const std::shared_ptr<ld::Resources> &resources)
     : resources_(resources), panel_turn(resources, "button_brown.png", false),
+      panel_tiles(resources, "button_brown.png", false),
+      panel_coins(resources, "button_brown.png", false),
       button_turn(resources, "button_brown_pressed.png", true) {
     set_positions();
 
@@ -15,6 +17,8 @@ Gui::Gui(const std::shared_ptr<ld::Resources> &resources)
 void Gui::render(sf::RenderWindow &window) const {
 
     panel_turn.render(window);
+    panel_tiles.render(window);
+    panel_coins.render(window);
     button_turn.render(window);
 }
 
@@ -22,6 +26,15 @@ void Gui::update(std::shared_ptr<ld::Player> player_1,
                  std::shared_ptr<ld::Player> player_2, bool human_active) {
 
     const std::string label_turn = (human_active ? "Your turn" : "AI turn");
+
+    button_turn.visible_ = human_active;
+
+    panel_coins.visible_ = human_active;
+    panel_coins.set_text(std::to_string(player_1->coins_) + " coins");
+
+    panel_tiles.visible_ = human_active;
+    panel_tiles.set_text("Land: " + std::to_string(player_1->tiles_) + "/" +
+                         std::to_string(player_1->all_tiles_));
 
     panel_turn.set_text(label_turn);
 }
@@ -40,6 +53,16 @@ void Gui::set_positions() {
         ld::config::get_screen_width() -
             panel_turn.sprite_.getLocalBounds().width - margin,
         2 * margin + panel_turn.sprite_.getLocalBounds().height);
+
+    panel_coins.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_coins.sprite_.getLocalBounds().width - margin,
+        5 * margin + panel_turn.sprite_.getLocalBounds().height * 2);
+
+    panel_tiles.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_tiles.sprite_.getLocalBounds().width - margin,
+        6 * margin + panel_turn.sprite_.getLocalBounds().height * 3);
 }
 
 ld::GuiAction Gui::handle_button_click(const sf::Vector2i &pos) {

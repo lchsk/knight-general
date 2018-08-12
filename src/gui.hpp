@@ -46,6 +46,8 @@ class Gui {
 
     const std::shared_ptr<ld::Resources> resources_;
     ld::Button panel_turn;
+    ld::Button panel_tiles;
+    ld::Button panel_coins;
     ld::Button button_turn;
 
   private:

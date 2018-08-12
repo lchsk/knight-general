@@ -23,6 +23,8 @@ class Player {
     const ld::TileType tile_type_;
 
     int coins_;
+    int tiles_;
+    int all_tiles_;
 };
 }
 

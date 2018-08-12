@@ -37,9 +37,6 @@ Map::Map(const ld::MapDefinition &map_definition,
     add_new_unit(player_2_, ld::UnitType::Armored);
 
     switch_players();
-
-    gui_.update(player_1_, player_2_,
-                active_player_->player_type_ == ld::PlayerType::Human);
 }
 
 ld::Tile *Map::find_unit_tile(const std::shared_ptr<ld::Unit> &unit) {
@@ -100,6 +97,9 @@ void Map::switch_players() {
 
     if (random == 0)
         add_game_resource();
+
+    gui_.update(player_1_, player_2_,
+                active_player_->player_type_ == ld::PlayerType::Human);
 }
 
 bool Map::check_free_tile_available(bool check_for_units,
@@ -174,13 +174,21 @@ void Map::add_game_resource() {
 void Map::land_payout() const {
     int payout = 0;
 
+    int all_tiles = 0;
+
     for (const auto &tile : tiles) {
         if (tile.get_type() == active_player_->tile_type_) {
             payout++;
         }
+
+        if (tile.get_type() != ld::TileType::Water) {
+            all_tiles++;
+        }
     }
 
     active_player_->coins_ += payout;
+    active_player_->tiles_ = payout;
+    active_player_->all_tiles_ = all_tiles;
 }
 
 bool Map::is_human_active() const { return active_player_ == player_1_; }
