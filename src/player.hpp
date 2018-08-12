@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "unit.hpp"
+#include "config.hpp"
 
 namespace ld {
 
@@ -12,9 +13,12 @@ enum class PlayerType {
 
 class Player {
   public:
-    Player();
+    Player(ld::PlayerType player_type, ld::TileType tile_type);
 
     std::shared_ptr<ld::Unit> selected_unit_;
+
+    const ld::PlayerType player_type_;
+    const ld::TileType tile_type_;
 };
 }
 

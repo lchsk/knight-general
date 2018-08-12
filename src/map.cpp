@@ -5,7 +5,7 @@ namespace ld {
 
 Map::Map(const ld::MapDefinition &map_definition,
          const ld::Resources &resources)
-    : player_1_(std::make_shared<ld::Player>()) {
+    : player_1_(std::make_shared<ld::Player>(ld::PlayerType::Human, ld::TileType::Grass)) {
 
     auto unit_1 = ld::Unit::build_armored_skeleton(resources);
 
