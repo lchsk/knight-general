@@ -33,6 +33,9 @@ Install dependencies on Ubuntu:
 
 ## Screenshots
 
+12/08/2018 20:27 BST - basic gui
+![](basic_gui.png "Basic GUI")
+
 12/08/2018 11:50 BST - two units
 ![](two_units.png "Two units")
 
