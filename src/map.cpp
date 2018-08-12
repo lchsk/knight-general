@@ -72,7 +72,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                 return;
             }
 
-            if (ld::map_coords::neighbor_tiles(selected_tile, unit_tile)) {
+            if (is_valid_move(selected_tile, unit_tile)) {
                 player_1_->selected_unit_->sprite.setPosition(
                     selected_tile.sprite.getPosition());
                 selected_tile.unit_ = player_1_->selected_unit_;
@@ -88,6 +88,46 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
         crosshair.setPosition(selected_tile.unit_->sprite.getPosition());
         selected_tile.unit_->selected_ = true;
         player_1_->selected_unit_ = selected_tile.unit_;
+    }
+}
+
+bool Map::is_valid_move(const ld::Tile &selected_tile,
+                        const ld::Tile *unit_tile) const {
+    const bool neighbor_tiles =
+        ld::map_coords::neighbor_tiles(selected_tile, unit_tile);
+
+    return neighbor_tiles and selected_tile.type_ != ld::TileType::Water;
+}
+
+void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
+                       ld::UnitType unit_type) {
+    // Check there's free space to add a unit
+    bool no_space = true;
+
+    for (const auto &tile : tiles) {
+        if (tile.unit_ == nullptr) {
+            no_space = false;
+        }
+    }
+
+    // Select a random tile
+    while (true) {
+        assert(tiles.size() > 0);
+
+        const int id = ld::randint(tiles.size() - 1);
+
+        auto &tile = tiles[id];
+
+        // Add a unit on the random tile
+        if (tile.type_ == player->tile_type_ and tile.unit_ == nullptr) {
+            auto unit =
+                ld::Unit::build_unit(*resources, player->faction_, unit_type);
+            units.push_back(unit);
+            tile.unit_ = unit;
+            unit->sprite.setPosition(tile.sprite.getPosition());
+
+            break;
+        }
     }
 }
 }
