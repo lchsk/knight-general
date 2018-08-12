@@ -79,6 +79,8 @@ class Map {
 
   private:
     void clean_up_units();
+    void switch_players();
+    bool is_human_active() const;
 
     ld::Gui gui_;
 
@@ -88,7 +90,10 @@ class Map {
     // MOVE OUT OF MAP
     sf::Sprite crosshair;
 
+    // Human player
     std::shared_ptr<ld::Player> player_1_;
+
+    // AI player
     std::shared_ptr<ld::Player> player_2_;
 
     std::shared_ptr<ld::Player> active_player_;

@@ -80,12 +80,27 @@ void Map::clean_up_units() {
                 units.end());
 }
 
+void Map::switch_players() {
+    // Unselect
+    for (auto &unit : units) {
+        unit->selected_ = false;
+    }
+
+    active_player_ = is_human_active() ? player_2_ : player_1_;
+}
+
+bool Map::is_human_active() const { return active_player_ == player_1_; }
+
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
+
+    if (!is_human_active()) {
+        return;
+    }
 
     ld::GuiAction action = gui_.handle_button_click(pos);
 
     if (action == ld::GuiAction::EndTurn) {
-        active_player_ = active_player_ == player_1_ ? player_2_ : player_1_;
+        switch_players();
         gui_.update(player_1_, player_2_,
                     active_player_->player_type_ == ld::PlayerType::Human);
         return;
@@ -144,9 +159,11 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
         }
     } else {
         // Select a unit
-        crosshair.setPosition(selected_tile.unit_->sprite.getPosition());
-        selected_tile.unit_->selected_ = true;
-        player_1_->selected_unit_ = selected_tile.unit_;
+        if (selected_tile.unit_->get_faction() == player_1_->faction_) {
+            crosshair.setPosition(selected_tile.unit_->sprite.getPosition());
+            selected_tile.unit_->selected_ = true;
+            player_1_->selected_unit_ = selected_tile.unit_;
+        }
     }
 }
 
