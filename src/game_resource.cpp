@@ -20,13 +20,8 @@ void GameResource::render(sf::RenderWindow &window) const {
 
 std::shared_ptr<ld::GameResource>
 GameResource::build(const ld::Resources &resources,
-                    ld::GameResourceType game_resource_type) {
-    std::unordered_map<ld::GameResourceType, std::string> resource_filenames = {
-        {ld::GameResourceType::Gold, "gold"},
-    };
-
-    const std::string filename =
-        resource_filenames[game_resource_type] + "_right.png";
+                    ld::GameResourceType game_resource_type,
+                    const std::string &filename) {
 
     std::shared_ptr<ld::GameResource> resource =
         std::make_shared<ld::GameResource>(resources.get_texture(filename),

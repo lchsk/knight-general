@@ -32,7 +32,7 @@ class GameResource {
 
     static std::shared_ptr<ld::GameResource>
     build(const ld::Resources &resources,
-          ld::GameResourceType game_resource_type);
+          ld::GameResourceType game_resource_type, const std::string &filename);
 
   private:
     const ld::GameResourceType game_resource_type_;

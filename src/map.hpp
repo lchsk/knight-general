@@ -81,6 +81,9 @@ class Map {
     void clean_up_units();
     void switch_players();
     bool is_human_active() const;
+    bool check_free_tile_available(bool check_for_units,
+                                   bool check_for_resources) const;
+    void add_game_resource();
 
     ld::Gui gui_;
 
