@@ -92,7 +92,10 @@ void Map::switch_players() {
 
     active_player_ = is_human_active() ? player_2_ : player_1_;
 
-    add_game_resource();
+	const int random = ld::randint(3);
+
+    if (random == 0)
+        add_game_resource();
 }
 
 bool Map::check_free_tile_available(bool check_for_units,
