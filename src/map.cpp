@@ -36,6 +36,15 @@ Map::Map(const ld::MapDefinition &map_definition,
     add_new_unit(player_2_, ld::UnitType::Armored);
 }
 
+ld::Tile *Map::find_unit_tile(const std::shared_ptr<ld::Unit> &unit) {
+    for (auto &tile : tiles) {
+        if (tile.unit_ == unit) {
+            return &tile;
+        }
+    }
+    return nullptr;
+}
+
 void Map::render(sf::RenderWindow &window) const {
     for (const auto &tile : tiles) {
         window.draw(tile.sprite);
@@ -50,6 +59,21 @@ void Map::render(sf::RenderWindow &window) const {
     }
 }
 
+void Map::clean_up_units() {
+    for (auto &tile : tiles) {
+        if (tile.unit_ and tile.unit_->get_strength() <= 0) {
+            tile.unit_->selected_ = false;
+            tile.unit_ = nullptr;
+        }
+    }
+
+    units.erase(std::remove_if(units.begin(), units.end(),
+                               [&](const auto &unit) {
+                                   return unit->get_strength() <= 0;
+                               }),
+                units.end());
+}
+
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
     const int tile_col = ld::map_coords::px2tile_col(pos.x);
     const int tile_row = ld::map_coords::px2tile_row(pos.y);
@@ -58,20 +82,20 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
     auto &selected_tile =
         tiles[ld::map_coords::coords_to_tile_id(tile_row, tile_col)];
 
-    if (selected_tile.unit_ == nullptr) {
+    if (player_1_->selected_unit_ and
+        player_1_->selected_unit_->can_fight(selected_tile.unit_)) {
+        ld::Tile *unit_tile = find_unit_tile(player_1_->selected_unit_);
+
+        if (is_valid_move(selected_tile, unit_tile)) {
+            player_1_->selected_unit_->fight(selected_tile.unit_);
+            clean_up_units();
+        }
+    } else if (!selected_tile.unit_) {
         // There's no unit on selected tile => Move
         if (player_1_->selected_unit_) {
-            ld::Tile *unit_tile = nullptr;
+            ld::Tile *unit_tile = find_unit_tile(player_1_->selected_unit_);
 
-            // Check if can move this unit
-            for (auto &tile : tiles) {
-                if (tile.unit_ == player_1_->selected_unit_) {
-                    unit_tile = &tile;
-                    break;
-                }
-            }
-
-            if (unit_tile == nullptr) {
+            if (!unit_tile) {
                 std::cout << "Could not find selected unit's tile\n";
                 return;
             }

@@ -44,6 +44,10 @@ inline int coords_to_tile_id(int tile_row, int tile_col) {
 
 inline bool neighbor_tiles(const ld::Tile &selected_tile,
                            const ld::Tile *unit_tile) {
+    if (!unit_tile) {
+        return false;
+    }
+
     const int row_diff = std::abs(selected_tile.row_ - unit_tile->row_);
     const int col_diff = std::abs(selected_tile.col_ - unit_tile->col_);
 
@@ -61,12 +65,17 @@ class Map {
 
     bool is_valid_move(const ld::Tile &selected_tile,
                        const ld::Tile *unit_tile) const;
+
+    ld::Tile *find_unit_tile(const std::shared_ptr<ld::Unit> &unit);
+
     void add_new_unit(std::shared_ptr<ld::Player> &player,
                       ld::UnitType unit_type);
 
     void handle_left_mouse_click(const sf::Vector2i &pos);
 
   private:
+    void clean_up_units();
+
     std::vector<ld::Tile> tiles;
     std::vector<std::shared_ptr<ld::Unit>> units;
 
