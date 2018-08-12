@@ -35,6 +35,9 @@ Map::Map(const ld::MapDefinition &map_definition,
 
     add_new_unit(player_1_, ld::UnitType::Armored);
     add_new_unit(player_2_, ld::UnitType::Armored);
+
+    gui_.update(player_1_, player_2_,
+                active_player_->player_type_ == ld::PlayerType::Human);
 }
 
 ld::Tile *Map::find_unit_tile(const std::shared_ptr<ld::Unit> &unit) {
@@ -183,5 +186,5 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
     }
 }
 
-void Map::update(const sf::Time &delta) { gui_.update(delta); }
+void Map::update(const sf::Time &delta) {}
 }

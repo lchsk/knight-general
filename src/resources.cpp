@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "resources.hpp"
 
 namespace ld {
@@ -23,6 +25,10 @@ void Resources::load() {
         }
 
         textures[filename] = std::move(tex);
+    }
+
+    if (!basic_font_.loadFromFile("assets/CaviarDreams.ttf")) {
+        std::cout << "No font found\n";
     }
 }
 

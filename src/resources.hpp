@@ -38,6 +38,8 @@ class Resources {
     void load();
     const sf::Texture &get_texture(const std::string &filename) const;
 
+    sf::Font basic_font_;
+
   private:
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
 };
