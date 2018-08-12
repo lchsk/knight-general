@@ -84,6 +84,7 @@ class Map {
     bool check_free_tile_available(bool check_for_units,
                                    bool check_for_resources) const;
     void add_game_resource();
+    void land_payout() const;
 
     ld::Gui gui_;
 

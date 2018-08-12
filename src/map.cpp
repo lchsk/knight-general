@@ -10,7 +10,7 @@ Map::Map(const ld::MapDefinition &map_definition,
           ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Earth)),
       player_2_(std::make_shared<ld::Player>(
           ld::PlayerType::AI, ld::Faction::Knight, ld::TileType::Grass)),
-      active_player_(player_1_), resources(resources) {
+      active_player_(player_2_), resources(resources) {
 
     const sf::Texture &texture_crosshair =
         resources->get_texture("crosshair.png");
@@ -35,6 +35,8 @@ Map::Map(const ld::MapDefinition &map_definition,
 
     add_new_unit(player_1_, ld::UnitType::Armored);
     add_new_unit(player_2_, ld::UnitType::Armored);
+
+    switch_players();
 
     gui_.update(player_1_, player_2_,
                 active_player_->player_type_ == ld::PlayerType::Human);
@@ -92,7 +94,9 @@ void Map::switch_players() {
 
     active_player_ = is_human_active() ? player_2_ : player_1_;
 
-	const int random = ld::randint(3);
+    const int random = ld::randint(3);
+
+    land_payout();
 
     if (random == 0)
         add_game_resource();
@@ -165,6 +169,18 @@ void Map::add_game_resource() {
             break;
         }
     }
+}
+
+void Map::land_payout() const {
+    int payout = 0;
+
+    for (const auto &tile : tiles) {
+        if (tile.get_type() == active_player_->tile_type_) {
+            payout++;
+        }
+    }
+
+    active_player_->coins_ += payout;
 }
 
 bool Map::is_human_active() const { return active_player_ == player_1_; }
