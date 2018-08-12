@@ -26,6 +26,28 @@ const MapDefinition map_1 = {{
 
 }};
 
+    namespace map_coords {
+        inline int px2tile_col(int x) {
+            return static_cast<double>(x) / ld::config::get_screen_width() * ld::config::COLS;
+        }
+
+        inline int px2tile_row(int y) {
+            return static_cast<double>(y) / ld::config::get_screen_height() * ld::config::ROWS;
+        }
+
+        inline int coords_to_tile_id(int tile_row, int tile_col) {
+            return tile_row * ld::config::COLS + tile_col;
+        }
+
+        inline bool neighbor_tiles(const ld::Tile& selected_tile, const ld::Tile* unit_tile) {
+            const int row_diff = std::abs(selected_tile.row_ - unit_tile->row_);
+            const int col_diff = std::abs(selected_tile.col_ - unit_tile->col_);
+
+            return ((row_diff == 1 and col_diff == 0)
+                    or (row_diff == 0 and col_diff == 1));
+        }
+    };
+
 class Map {
   public:
     Map(const ld::MapDefinition &map_definition,

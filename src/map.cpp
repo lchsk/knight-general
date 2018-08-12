@@ -49,17 +49,15 @@ void Map::render(sf::RenderWindow &window) const {
 
     void Map::handle_left_mouse_click(const sf::Vector2i& pos)
     {
-        int tile_col = static_cast<double>(pos.x) / ld::config::get_screen_width() * ld::config::COLS;
-        int tile_row = static_cast<double>(pos.y) / ld::config::get_screen_height() * ld::config::ROWS;
+        const int tile_col = ld::map_coords::px2tile_col(pos.x);
+        const int tile_row = ld::map_coords::px2tile_row(pos.y);
 
         // Tile that was just clicked on
-        auto& selected_tile = tiles[tile_row * ld::config::COLS + tile_col];
+        auto& selected_tile = tiles[ld::map_coords::coords_to_tile_id(tile_row, tile_col)];
 
         if (selected_tile.unit_ == nullptr) {
             // There's no unit on selected tile => Move
             if (player_1_->selected_unit_) {
-                bool valid_move = false;
-
                 ld::Tile* unit_tile = nullptr;
 
                 // Check if can move this unit
@@ -75,15 +73,7 @@ void Map::render(sf::RenderWindow &window) const {
                     return;
                 }
 
-                const int row_diff = std::abs(selected_tile.row_ - unit_tile->row_);
-                const int col_diff = std::abs(selected_tile.col_ - unit_tile->col_);
-
-                if ((row_diff == 1 and col_diff == 0)
-                    or (row_diff == 0 and col_diff == 1)) {
-                    valid_move = true;
-                }
-
-                if (valid_move) {
+                if (ld::map_coords::neighbor_tiles(selected_tile, unit_tile)) {
                     player_1_->selected_unit_->sprite.setPosition(selected_tile.sprite.getPosition());
                     selected_tile.unit_ = player_1_->selected_unit_;
                     player_1_->selected_unit_->selected_ = false;
