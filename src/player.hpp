@@ -1,8 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "unit.hpp"
 #include "config.hpp"
+#include "unit.hpp"
 
 namespace ld {
 
@@ -13,11 +13,13 @@ enum class PlayerType {
 
 class Player {
   public:
-    Player(ld::PlayerType player_type, ld::TileType tile_type);
+    Player(ld::PlayerType player_type, ld::Faction faction,
+           ld::TileType tile_type);
 
     std::shared_ptr<ld::Unit> selected_unit_;
 
     const ld::PlayerType player_type_;
+    const ld::Faction faction_;
     const ld::TileType tile_type_;
 };
 }

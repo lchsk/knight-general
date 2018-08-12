@@ -4,15 +4,13 @@
 namespace ld {
 
 Map::Map(const ld::MapDefinition &map_definition,
-         const ld::Resources &resources)
-    : player_1_(std::make_shared<ld::Player>(ld::PlayerType::Human, ld::TileType::Grass)) {
-
-    auto unit_1 = ld::Unit::build_armored_skeleton(resources);
-
-    units.push_back(unit_1);
+         const std::shared_ptr<ld::Resources> &resources)
+    : player_1_(std::make_shared<ld::Player>(
+          ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Grass)),
+      resources(resources) {
 
     const sf::Texture &texture_crosshair =
-        resources.get_texture("crosshair.png");
+        resources->get_texture("crosshair.png");
     crosshair = sf::Sprite(texture_crosshair);
 
     for (unsigned row = 0; row < ld::config::ROWS; row++) {
@@ -22,7 +20,7 @@ Map::Map(const ld::MapDefinition &map_definition,
 
             try {
                 const sf::Texture &texture =
-                    resources.get_texture(tc.get_filename());
+                    resources->get_texture(tc.get_filename());
                 tiles.push_back(ld::Tile(texture, tc.type_, row, col));
             } catch (const std::out_of_range &) {
                 std::cout << "Filename " << tc.get_filename() << " not found"
@@ -31,7 +29,7 @@ Map::Map(const ld::MapDefinition &map_definition,
         }
     }
 
-    tiles[0].unit_ = unit_1;
+    add_new_unit(player_1_, ld::UnitType::Armored);
 };
 
 void Map::render(sf::RenderWindow &window) const {

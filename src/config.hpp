@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <random>
+
 namespace ld {
 namespace config {
 const int TILE_SIZE = 64;
@@ -22,6 +24,17 @@ enum class TileType {
     Earth,
     Water,
 };
+
+/* Return random int [min, max] */
+inline int randint(int max, int min = 0) {
+    // Move initialisation somewhere else
+    std::random_device rd;
+    std::mt19937 rng(rd());
+
+    std::uniform_int_distribution<int> uni(min, max);
+
+    return uni(rng);
+}
 }
 
 #endif /* CONFIG_H */

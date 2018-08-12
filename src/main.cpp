@@ -36,6 +36,7 @@ void handle_events(sf::RenderWindow &window, ld::Map &map) {
 }
 
 int main() {
+    srand(time(0));
     sf::RenderWindow window(sf::VideoMode(ld::config::get_screen_width(),
                                           ld::config::get_screen_height()),
                             "knights");
@@ -44,8 +45,9 @@ int main() {
     sf::Clock clock;
     sf::Time last_update;
 
-    ld::Resources resources;
-    resources.load();
+    std::shared_ptr<ld::Resources> resources =
+        std::make_shared<ld::Resources>();
+    resources->load();
 
     ld::Map map(ld::map_1, resources);
 

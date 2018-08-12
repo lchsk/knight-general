@@ -14,10 +14,6 @@ enum class UnitType {
     Armored,
 };
 
-// enum class UnitFaction {
-// Skeleton,
-// };
-
 class Unit {
   public:
     Unit(const sf::Texture &texture, ld::Faction unit_faction,
@@ -31,8 +27,9 @@ class Unit {
     sf::Sprite sprite;
     bool selected_;
 
-    static std::shared_ptr<ld::Unit>
-    build_armored_skeleton(const ld::Resources &resources);
+    static std::shared_ptr<ld::Unit> build_unit(const ld::Resources &resources,
+                                                ld::Faction faction,
+                                                ld::UnitType unit_type);
 
   private:
     const ld::Faction unit_faction_;

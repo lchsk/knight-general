@@ -1,6 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <cassert>
 #include <iostream>
 
 #include "player.hpp"
@@ -54,9 +55,41 @@ inline bool neighbor_tiles(const ld::Tile &selected_tile,
 class Map {
   public:
     Map(const ld::MapDefinition &map_definition,
-        const ld::Resources &resources);
+        const std::shared_ptr<ld::Resources> &resources);
 
     void render(sf::RenderWindow &window) const;
+
+    void add_new_unit(std::shared_ptr<ld::Player> &player,
+                      ld::UnitType unit_type) {
+        // Check there's free space to add a unit
+        bool no_space = true;
+
+        for (const auto &tile : tiles) {
+            if (tile.unit_ == nullptr) {
+                no_space = false;
+            }
+        }
+
+        // Select a random tile
+        while (true) {
+            assert(tiles.size() > 0);
+
+            const int id = ld::randint(tiles.size() - 1);
+
+            auto &tile = tiles[id];
+
+            // Add a unit on the random tile
+            if (tile.type_ == player->tile_type_ and tile.unit_ == nullptr) {
+                auto unit = ld::Unit::build_unit(*resources, player->faction_,
+                                                 unit_type);
+                units.push_back(unit);
+                tile.unit_ = unit;
+                unit->sprite.setPosition(tile.sprite.getPosition());
+
+                break;
+            }
+        }
+    }
 
     void handle_left_mouse_click(const sf::Vector2i &pos);
 
@@ -68,6 +101,8 @@ class Map {
     sf::Sprite crosshair;
 
     std::shared_ptr<ld::Player> player_1_;
+
+    std::shared_ptr<ld::Resources> resources;
 };
 }
 
