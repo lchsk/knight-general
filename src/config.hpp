@@ -17,6 +17,7 @@ constexpr int get_screen_height() noexcept { return TILE_SIZE * ROWS; }
 // TODO: move this out
 enum class Faction {
     Skeleton,
+    Knight,
 };
 
 enum class TileType {

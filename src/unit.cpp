@@ -21,7 +21,7 @@ std::shared_ptr<ld::Unit> Unit::build_unit(const ld::Resources &resources,
                                            ld::Faction faction,
                                            ld::UnitType unit_type) {
     std::unordered_map<ld::Faction, std::string> faction_names = {
-        {ld::Faction::Skeleton, "skeleton"},
+        {ld::Faction::Skeleton, "skeleton"}, {ld::Faction::Knight, "knight"},
     };
 
     std::unordered_map<ld::UnitType, std::string> faction_units = {

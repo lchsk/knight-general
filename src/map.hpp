@@ -74,6 +74,7 @@ class Map {
     sf::Sprite crosshair;
 
     std::shared_ptr<ld::Player> player_1_;
+    std::shared_ptr<ld::Player> player_2_;
 
     std::shared_ptr<ld::Resources> resources;
 };

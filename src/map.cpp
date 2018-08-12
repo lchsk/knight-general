@@ -6,7 +6,9 @@ namespace ld {
 Map::Map(const ld::MapDefinition &map_definition,
          const std::shared_ptr<ld::Resources> &resources)
     : player_1_(std::make_shared<ld::Player>(
-          ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Grass)),
+          ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Earth)),
+      player_2_(std::make_shared<ld::Player>(
+          ld::PlayerType::AI, ld::Faction::Knight, ld::TileType::Grass)),
       resources(resources) {
 
     const sf::Texture &texture_crosshair =
@@ -30,6 +32,7 @@ Map::Map(const ld::MapDefinition &map_definition,
     }
 
     add_new_unit(player_1_, ld::UnitType::Armored);
+    add_new_unit(player_2_, ld::UnitType::Armored);
 };
 
 void Map::render(sf::RenderWindow &window) const {
