@@ -21,11 +21,16 @@ Install dependencies on Ubuntu:
 
 ## Assets
 
-https://opengameart.org/content/medieval-rts-120 by Kenney (public domain)
-https://opengameart.org/content/lpc-medieval-fantasy-character-sprites by wulax (CC-BY-SA 3.0 GPL 3.0)
-https://opengameart.org/content/crosshair-pack-200%C3%97 by Kenney (public domain)
+- https://opengameart.org/content/medieval-rts-120 by Kenney (public domain)
+
+- https://opengameart.org/content/lpc-medieval-fantasy-character-sprites by wulax (CC-BY-SA 3.0 GPL 3.0)
+
+- https://opengameart.org/content/crosshair-pack-200%C3%97 by Kenney (public domain)
 
 ## Screenshots
+
+12/08/2018 11:50 BST - two units
+![](two_units.png "Two units")
 
 11/08/2018 18:05 BST - unit on a map
 ![](unit_on_a_map.png "Unit on a map")
