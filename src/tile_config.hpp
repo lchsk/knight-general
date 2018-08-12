@@ -3,12 +3,16 @@
 
 #include <string>
 
+#include "config.hpp"
+
 namespace ld {
 class TileConfig {
   public:
-    TileConfig(const std::string &filename);
+    TileConfig(const std::string &filename, ld::TileType type);
 
     const std::string &get_filename() const;
+
+    const ld::TileType type_;
 
   private:
     const std::string filename_;

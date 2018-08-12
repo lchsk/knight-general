@@ -5,20 +5,20 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "config.hpp"
 #include "map.hpp"
 #include "resources.hpp"
 #include "tile.hpp"
-#include "config.hpp"
 
 void update(const sf::Time &delta) {}
 
-void render(sf::RenderWindow &window, const ld::Map& map) {
+void render(sf::RenderWindow &window, const ld::Map &map) {
     window.clear();
     map.render(window);
     window.display();
 }
 
-void handle_events(sf::RenderWindow &window, ld::Map& map) {
+void handle_events(sf::RenderWindow &window, ld::Map &map) {
     sf::Event event;
 
     while (window.pollEvent(event)) {
@@ -36,7 +36,9 @@ void handle_events(sf::RenderWindow &window, ld::Map& map) {
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(ld::config::get_screen_width(), ld::config::get_screen_height()), "knights");
+    sf::RenderWindow window(sf::VideoMode(ld::config::get_screen_width(),
+                                          ld::config::get_screen_height()),
+                            "knights");
 
     sf::Time per_frame = sf::seconds(1.0f / 60.0f);
     sf::Clock clock;

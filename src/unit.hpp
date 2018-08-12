@@ -5,8 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "resources.hpp"
 #include "config.hpp"
+#include "resources.hpp"
 
 namespace ld {
 
@@ -15,7 +15,7 @@ enum class UnitType {
 };
 
 // enum class UnitFaction {
-    // Skeleton,
+// Skeleton,
 // };
 
 class Unit {
@@ -39,7 +39,6 @@ class Unit {
     const ld::UnitType unit_type_;
 
     int strength_;
-
 };
 }
 

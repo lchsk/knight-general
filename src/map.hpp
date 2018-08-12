@@ -3,11 +3,11 @@
 
 #include <iostream>
 
+#include "player.hpp"
 #include "resources.hpp"
 #include "tile.hpp"
 #include "tile_config.hpp"
 #include "unit.hpp"
-#include "player.hpp"
 
 namespace ld {
 using MapDefinition = std::array<std::array<unsigned, 13>, 10>;
@@ -26,27 +26,30 @@ const MapDefinition map_1 = {{
 
 }};
 
-    namespace map_coords {
-        inline int px2tile_col(int x) {
-            return static_cast<double>(x) / ld::config::get_screen_width() * ld::config::COLS;
-        }
+namespace map_coords {
+inline int px2tile_col(int x) {
+    return static_cast<double>(x) / ld::config::get_screen_width() *
+           ld::config::COLS;
+}
 
-        inline int px2tile_row(int y) {
-            return static_cast<double>(y) / ld::config::get_screen_height() * ld::config::ROWS;
-        }
+inline int px2tile_row(int y) {
+    return static_cast<double>(y) / ld::config::get_screen_height() *
+           ld::config::ROWS;
+}
 
-        inline int coords_to_tile_id(int tile_row, int tile_col) {
-            return tile_row * ld::config::COLS + tile_col;
-        }
+inline int coords_to_tile_id(int tile_row, int tile_col) {
+    return tile_row * ld::config::COLS + tile_col;
+}
 
-        inline bool neighbor_tiles(const ld::Tile& selected_tile, const ld::Tile* unit_tile) {
-            const int row_diff = std::abs(selected_tile.row_ - unit_tile->row_);
-            const int col_diff = std::abs(selected_tile.col_ - unit_tile->col_);
+inline bool neighbor_tiles(const ld::Tile &selected_tile,
+                           const ld::Tile *unit_tile) {
+    const int row_diff = std::abs(selected_tile.row_ - unit_tile->row_);
+    const int col_diff = std::abs(selected_tile.col_ - unit_tile->col_);
 
-            return ((row_diff == 1 and col_diff == 0)
-                    or (row_diff == 0 and col_diff == 1));
-        }
-    };
+    return ((row_diff == 1 and col_diff == 0) or
+            (row_diff == 0 and col_diff == 1));
+}
+};
 
 class Map {
   public:
@@ -55,7 +58,7 @@ class Map {
 
     void render(sf::RenderWindow &window) const;
 
-    void handle_left_mouse_click(const sf::Vector2i& pos);
+    void handle_left_mouse_click(const sf::Vector2i &pos);
 
   private:
     std::vector<ld::Tile> tiles;
@@ -65,7 +68,6 @@ class Map {
     sf::Sprite crosshair;
 
     std::shared_ptr<ld::Player> player_1_;
-
 };
 }
 
