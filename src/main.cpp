@@ -10,7 +10,7 @@
 #include "resources.hpp"
 #include "tile.hpp"
 
-void update(const sf::Time &delta) {}
+void update(const sf::Time &delta, ld::Map &map) { map.update(delta); }
 
 void render(sf::RenderWindow &window, const ld::Map &map) {
     window.clear();
@@ -56,7 +56,7 @@ int main() {
 
         if (delta > per_frame) {
             handle_events(window, map);
-            update(delta);
+            update(delta, map);
             render(window, map);
             last_update = clock.getElapsedTime();
         }

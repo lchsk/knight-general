@@ -9,6 +9,7 @@ Map::Map(const ld::MapDefinition &map_definition,
           ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Earth)),
       player_2_(std::make_shared<ld::Player>(
           ld::PlayerType::AI, ld::Faction::Knight, ld::TileType::Grass)),
+      active_player_(player_1_),
       resources(resources) {
 
     const sf::Texture &texture_crosshair =
@@ -179,4 +180,6 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
         }
     }
 }
+
+void Map::update(const sf::Time &delta) {}
 }

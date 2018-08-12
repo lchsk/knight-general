@@ -73,6 +73,8 @@ class Map {
 
     void handle_left_mouse_click(const sf::Vector2i &pos);
 
+    void update(const sf::Time &delta);
+
   private:
     void clean_up_units();
 
@@ -84,6 +86,8 @@ class Map {
 
     std::shared_ptr<ld::Player> player_1_;
     std::shared_ptr<ld::Player> player_2_;
+
+    std::shared_ptr<ld::Player> active_player_;
 
     std::shared_ptr<ld::Resources> resources;
 };
