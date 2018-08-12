@@ -76,6 +76,21 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                 player_1_->selected_unit_->sprite.setPosition(
                     selected_tile.sprite.getPosition());
                 selected_tile.unit_ = player_1_->selected_unit_;
+                selected_tile.type_ = player_1_->tile_type_;
+                const auto pos = selected_tile.sprite.getPosition();
+
+                std::string texture_name;
+
+                for (const auto &tile_config : TILES) {
+                    if (tile_config.type_ == player_1_->tile_type_) {
+                        texture_name = tile_config.get_filename();
+                        break;
+                    }
+                }
+
+                selected_tile.sprite =
+                    sf::Sprite(resources->get_texture(texture_name));
+                selected_tile.sprite.setPosition(pos);
                 player_1_->selected_unit_->selected_ = false;
                 player_1_->selected_unit_ = nullptr;
                 unit_tile->unit_ = nullptr;

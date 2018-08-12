@@ -17,7 +17,7 @@ class Tile {
 
     int row_, col_;
 
-    const ld::TileType type_;
+    ld::TileType type_;
 
   private:
 };
