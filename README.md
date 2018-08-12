@@ -25,7 +25,11 @@ Install dependencies on Ubuntu:
 
 - https://opengameart.org/content/lpc-medieval-fantasy-character-sprites by wulax (CC-BY-SA 3.0 GPL 3.0)
 
+- https://opengameart.org/content/ui-pack-rpg-extension by Kenney (public domain)
+
 - https://opengameart.org/content/crosshair-pack-200%C3%97 by Kenney (public domain)
+
+- https://www.dafont.com/caviar-dreams.font by Lauren Thompson (100% free)
 
 ## Screenshots
 

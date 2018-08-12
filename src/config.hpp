@@ -7,7 +7,7 @@ namespace ld {
 namespace config {
 const int TILE_SIZE = 64;
 const int ROWS = 10;
-const int COLS = 13;
+const int COLS = 16;
 
 constexpr int get_screen_width() noexcept { return TILE_SIZE * COLS; }
 

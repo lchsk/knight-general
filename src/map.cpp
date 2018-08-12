@@ -5,12 +5,12 @@ namespace ld {
 
 Map::Map(const ld::MapDefinition &map_definition,
          const std::shared_ptr<ld::Resources> &resources)
-    : player_1_(std::make_shared<ld::Player>(
+    : gui_(resources),
+      player_1_(std::make_shared<ld::Player>(
           ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Earth)),
       player_2_(std::make_shared<ld::Player>(
           ld::PlayerType::AI, ld::Faction::Knight, ld::TileType::Grass)),
-      active_player_(player_1_),
-      resources(resources) {
+      active_player_(player_1_), resources(resources) {
 
     const sf::Texture &texture_crosshair =
         resources->get_texture("crosshair.png");
@@ -58,6 +58,8 @@ void Map::render(sf::RenderWindow &window) const {
             window.draw(crosshair);
         }
     }
+
+    gui_.render(window);
 }
 
 void Map::clean_up_units() {
@@ -181,5 +183,5 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
     }
 }
 
-void Map::update(const sf::Time &delta) {}
+void Map::update(const sf::Time &delta) { gui_.update(delta); }
 }
