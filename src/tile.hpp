@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "config.hpp"
+#include "game_resource.hpp"
 #include "unit.hpp"
 
 namespace ld {
@@ -17,6 +18,7 @@ class Tile {
     sf::Sprite sprite;
 
     std::shared_ptr<ld::Unit> unit_;
+    std::shared_ptr<ld::GameResource> game_resource_;
 
     int row_, col_;
 
