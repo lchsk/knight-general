@@ -32,8 +32,8 @@ class Unit {
                                                 ld::UnitType unit_type);
 
   private:
-    const ld::Faction unit_faction_;
     const ld::UnitType unit_type_;
+    const ld::Faction unit_faction_;
 
     int strength_;
 };

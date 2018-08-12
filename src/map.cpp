@@ -34,7 +34,7 @@ Map::Map(const ld::MapDefinition &map_definition,
 
     add_new_unit(player_1_, ld::UnitType::Armored);
     add_new_unit(player_2_, ld::UnitType::Armored);
-};
+}
 
 void Map::render(sf::RenderWindow &window) const {
     for (const auto &tile : tiles) {
@@ -126,7 +126,13 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
     for (const auto &tile : tiles) {
         if (tile.unit_ == nullptr) {
             no_space = false;
+            break;
         }
+    }
+
+    if (no_space) {
+        std::cout << "No space to add this unit!\n";
+        return;
     }
 
     // Select a random tile

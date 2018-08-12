@@ -50,7 +50,7 @@ inline bool neighbor_tiles(const ld::Tile &selected_tile,
     return ((row_diff == 1 and col_diff == 0) or
             (row_diff == 0 and col_diff == 1));
 }
-};
+}
 
 class Map {
   public:
