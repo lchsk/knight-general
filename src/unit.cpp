@@ -35,7 +35,7 @@ void Unit::fight(std::shared_ptr<ld::Unit> &unit) {
     int randomized_diff = ld::randint(diff);
 
     if (randomized_diff == 0)
-        randomized_diff = ld::randint(5, 2);
+        randomized_diff = ld::randint(3, 2);
 
     randomized_diff = std::max(2, randomized_diff);
 
