@@ -92,9 +92,9 @@ void Map::switch_players() {
 
     active_player_ = is_human_active() ? player_2_ : player_1_;
 
-    const int random = ld::randint(3);
-
     land_payout();
+
+    const int random = ld::randint(3);
 
     if (random == 0)
         add_game_resource();
@@ -200,9 +200,103 @@ void Map::land_payout() {
     active_player_->coins_ += std::ceil(active_player_->tiles_ / 4);
 }
 
-void Map::play_ai() {}
+void Map::play_ai() {
+
+    for (auto &unit : units) {
+        if (unit->get_faction() == player_1_->faction_) {
+            // Skip Human units
+            continue;
+        }
+
+        ld::Tile *unit_tile = find_unit_tile(unit);
+
+        if (!unit_tile) {
+            continue;
+        }
+
+        std::string texture_name;
+
+        for (const auto &tile_config : TILES) {
+            if (tile_config.get_type() == player_2_->tile_type_) {
+                texture_name = tile_config.get_filename();
+                break;
+            }
+        }
+
+        // Collect a resource or attack
+
+        for (auto &tile : tiles) {
+            if (is_valid_move(tile, unit_tile)) {
+                if (tile.game_resource_) {
+                    const int payout =
+                        tile.game_resource_->get_resource_payout();
+                    player_2_->coins_ += payout;
+                    move_enemy_unit(unit, tile, unit_tile, texture_name);
+                    return;
+                } else if (unit->can_fight(tile.unit_)) {
+                    unit->fight(tile.unit_);
+                    clean_up_units();
+                    return;
+                }
+            }
+        }
+
+        // Find optimal move
+
+        std::vector<ld::Tile *> target_tiles;
+
+        for (auto &tile : tiles) {
+            if (tile.game_resource_ or
+                (tile.unit_ and
+                 tile.unit_->get_faction() != player_2_->faction_) or
+                (tile.get_type() != ld::TileType::Water and
+                 tile.get_type() != player_2_->tile_type_)) {
+                target_tiles.push_back(&tile);
+            }
+        }
+
+        ld::Tile *closest_tile = nullptr;
+        int shortest_dist = 999999;
+
+        for (const auto tile : target_tiles) {
+            int dist = ld::map_coords::calc_distance(*tile, unit_tile);
+
+            if (dist < shortest_dist) {
+                shortest_dist = dist;
+                closest_tile = tile;
+            }
+        }
+
+        if (closest_tile) {
+            for (auto &tile : tiles) {
+                if (is_valid_move(tile, unit_tile)) {
+                    int dist =
+                        ld::map_coords::calc_distance(tile, closest_tile);
+
+                    if (dist < shortest_dist) {
+                        move_enemy_unit(unit, tile, unit_tile, texture_name);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
 
 bool Map::is_human_active() const { return active_player_ == player_1_; }
+
+void Map::move_enemy_unit(const std::shared_ptr<ld::Unit> &unit, ld::Tile &tile,
+                          ld::Tile *unit_tile,
+                          const std::string &texture_name) {
+    const auto pos = tile.sprite.getPosition();
+    tile.game_resource_ = nullptr;
+    tile.unit_ = unit;
+    unit_tile->unit_ = nullptr;
+    tile.sprite = sf::Sprite(resources->get_texture(texture_name));
+    tile.sprite.setPosition(pos);
+    tile.unit_->sprite.setPosition(pos);
+    tile.set_type(player_2_->tile_type_);
+}
 
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
@@ -232,6 +326,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
         if (is_valid_move(selected_tile, unit_tile)) {
             player_1_->selected_unit_->fight(selected_tile.unit_);
+            player_1_->selected_unit_->already_moved_ = true;
             clean_up_units();
         }
     } else if (!selected_tile.unit_) {
