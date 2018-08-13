@@ -39,6 +39,9 @@ Install dependencies on Ubuntu:
 
 ## Screenshots
 
+13/08/2018 20:42 BST - almost final version
+![](almost_final_version.png "Almost final version")
+
 12/08/2018 20:27 BST - basic gui
 ![](basic_gui.png "Basic GUI")
 
