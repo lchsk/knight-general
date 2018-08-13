@@ -29,6 +29,12 @@ Install dependencies on Ubuntu:
 
 - https://opengameart.org/content/crosshair-pack-200%C3%97 by Kenney (public domain)
 
+### Music
+
+- https://opengameart.org/content/adventure-begins by bart (GPL 3.0**
+
+### Fonts
+
 - https://www.dafont.com/caviar-dreams.font by Lauren Thompson (100% free)
 
 ## Screenshots

@@ -30,6 +30,14 @@ void Resources::load() {
     if (!basic_font_.loadFromFile("assets/CaviarDreams.ttf")) {
         std::cout << "No font found\n";
     }
+
+    if (music_.openFromFile("assets/little_town_orchestral.ogg")) {
+        music_.setVolume(100);
+        music_.setLoop(true);
+        music_.play();
+    } else {
+        std::cout << "No music found\n";
+    }
 }
 
 const sf::Texture &Resources::get_texture(const std::string &filename) const {

@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "config.hpp"
@@ -38,6 +39,7 @@ const std::vector<std::string> files = {
 
     // UI
     "button_brown.png", "button_brown_pressed.png", "crosshair.png",
+    "cursor.png",
 
     // Resources
     "gold.png", "stone_1.png", "stone_2.png", "stone_3.png", "stone_4.png",
@@ -51,6 +53,7 @@ class Resources {
     const sf::Texture &get_texture(const std::string &filename) const;
 
     sf::Font basic_font_;
+    sf::Music music_;
 
   private:
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
