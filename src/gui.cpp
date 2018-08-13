@@ -8,10 +8,17 @@ Gui::Gui(const std::shared_ptr<ld::Resources> &resources)
     : resources_(resources), panel_turn(resources, "button_brown.png", false),
       panel_tiles(resources, "button_brown.png", false),
       panel_coins(resources, "button_brown.png", false),
-      button_turn(resources, "button_brown_pressed.png", true) {
+      button_turn(resources, "button_brown_pressed.png", true),
+      button_warrior(resources, "button_brown_pressed.png", true),
+      button_armored(resources, "button_brown_pressed.png", true),
+      button_special(resources, "button_brown_pressed.png", true) {
     set_positions();
 
     button_turn.set_text("End turn");
+
+    button_warrior.set_text("Warrior");
+    button_armored.set_text("Armored warrior");
+    button_special.set_text("Special");
 }
 
 void Gui::render(sf::RenderWindow &window) const {
@@ -20,6 +27,10 @@ void Gui::render(sf::RenderWindow &window) const {
     panel_tiles.render(window);
     panel_coins.render(window);
     button_turn.render(window);
+
+    button_warrior.render(window);
+    button_armored.render(window);
+    button_special.render(window);
 }
 
 void Gui::update(std::shared_ptr<ld::Player> player_1,
@@ -63,6 +74,21 @@ void Gui::set_positions() {
         ld::config::get_screen_width() -
             panel_tiles.sprite_.getLocalBounds().width - margin,
         6 * margin + panel_turn.sprite_.getLocalBounds().height * 3);
+
+    button_warrior.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_tiles.sprite_.getLocalBounds().width - margin,
+        8 * margin + panel_turn.sprite_.getLocalBounds().height * 5);
+
+    button_armored.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_tiles.sprite_.getLocalBounds().width - margin,
+        9 * margin + panel_turn.sprite_.getLocalBounds().height * 6);
+
+    button_special.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_tiles.sprite_.getLocalBounds().width - margin,
+        10 * margin + panel_turn.sprite_.getLocalBounds().height * 7);
 }
 
 ld::GuiAction Gui::handle_button_click(const sf::Vector2i &pos) {

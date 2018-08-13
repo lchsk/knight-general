@@ -308,22 +308,14 @@ void Map::play_ai() {
 
     clean_up_units();
 
-    const int coins = active_player_->coins_;
     const int random = ld::randint(3);
 
-    const int cost_special = 200;
-    const int cost_armored = 120;
-    const int cost_warrior = 80;
+    add_new_unit(player_2_, ld::UnitType::Special);
 
-    if (coins >= cost_special) {
-        add_new_unit(player_2_, ld::UnitType::Special);
-        active_player_->coins_ -= cost_special;
-    } else if (coins >= cost_armored and random == 0) {
+    if (random == 0) {
         add_new_unit(player_2_, ld::UnitType::Armored);
-        active_player_->coins_ -= cost_armored;
-    } else if (coins >= cost_warrior and random == 1) {
+    } else if (random == 1) {
         add_new_unit(player_2_, ld::UnitType::Warrior);
-        active_player_->coins_ -= cost_warrior;
     }
 }
 
@@ -357,9 +349,25 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
     ld::GuiAction action = gui_.handle_button_click(pos);
 
-    if (action == ld::GuiAction::EndTurn) {
+    switch (action) {
+    case ld::GuiAction::EndTurn:
         end_human_turn();
         return;
+
+    case ld::GuiAction::AddWarriorUnit:
+        add_new_unit(player_1_, ld::UnitType::Warrior);
+        return;
+
+    case ld::GuiAction::AddArmoredUnit:
+        add_new_unit(player_1_, ld::UnitType::Armored);
+        return;
+
+    case ld::GuiAction::AddSpecialUnit:
+        add_new_unit(player_1_, ld::UnitType::Special);
+        return;
+
+    case ld::GuiAction::NoAction:
+        break;
     }
 
     const int tile_col = ld::map_coords::px2tile_col(pos.x);
@@ -458,6 +466,18 @@ bool Map::is_valid_move(const ld::Tile &selected_tile,
 
 void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
                        ld::UnitType unit_type) {
+    std::unordered_map<ld::UnitType, int> unit_costs = {
+        {ld::UnitType::Warrior, 80},
+        {ld::UnitType::Armored, 120},
+        {ld::UnitType::Special, 220},
+    };
+
+    const int cost = unit_costs[unit_type];
+    const int coins = player->coins_;
+
+    if (cost > coins) {
+        return;
+    }
 
     bool free_tile = check_free_tile_available(true, false);
 
@@ -486,6 +506,7 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
             units.push_back(unit);
             tile.unit_ = unit;
             unit->sprite.setPosition(tile.sprite.getPosition());
+            player->coins_ -= cost;
 
             break;
         }

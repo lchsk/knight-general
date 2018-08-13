@@ -13,6 +13,9 @@ namespace ld {
 enum class GuiAction {
     NoAction,
     EndTurn,
+    AddWarriorUnit,
+    AddArmoredUnit,
+    AddSpecialUnit,
 };
 
 class Button {
@@ -49,6 +52,10 @@ class Gui {
     ld::Button panel_tiles;
     ld::Button panel_coins;
     ld::Button button_turn;
+
+    ld::Button button_warrior;
+    ld::Button button_armored;
+    ld::Button button_special;
 
   private:
     void set_positions();
