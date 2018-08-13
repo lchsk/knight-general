@@ -18,6 +18,8 @@ class Player {
 
     std::shared_ptr<ld::Unit> selected_unit_;
 
+    bool is_human() const;
+
     const ld::PlayerType player_type_;
     const ld::Faction faction_;
     const ld::TileType tile_type_;
