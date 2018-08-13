@@ -1,6 +1,18 @@
 # Knight General
 ## Turn-based strategy for Ludum Dare 42. Theme: Running out of space
 
+## Description
+
+Knight General is inspired by classic turn-based strategy games. The aim of the game is to control the whole map (so that the enemy 'runs out of space'). To do so, a player can move their units into enemy territory, thus increasing their possessions. Each player can buy more units, all of which can fight the enemies and collect resources. Units are bought with coins, which each player collects by:
+- gathering resources
+- receiving a payout at the beginning of each turn, which depends on the size of owned land
+
+### Features
+
+- two powerful sides: knights and skeletons
+- each side has three different units
+- difficult AI opponent
+- several types of resources (gold, stone, timber, trees) which can be collected and sold to receive coins
 
 ## Dependencies
 
