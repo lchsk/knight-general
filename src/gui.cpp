@@ -8,17 +8,29 @@ Gui::Gui(const std::shared_ptr<ld::Resources> &resources)
     : resources_(resources), panel_turn(resources, "button_brown.png", false),
       panel_tiles(resources, "button_brown.png", false),
       panel_coins(resources, "button_brown.png", false),
+      panel_info(resources, "button_brown.png", false),
+      panel_unit_name(resources, "button_brown.png", false),
+      panel_unit_faction(resources, "button_brown.png", false),
+      panel_unit_strength(resources, "button_brown.png", false),
       button_turn(resources, "button_brown_pressed.png", true),
       button_warrior(resources, "button_brown_pressed.png", true),
       button_armored(resources, "button_brown_pressed.png", true),
-      button_special(resources, "button_brown_pressed.png", true) {
+      button_special(resources, "button_brown_pressed.png", true),
+      cursor(resources->get_texture("cursor.png")) {
     set_positions();
 
-    button_turn.set_text("End turn");
+    button_turn.set_text("End turn (Ret)");
+
+    panel_info.visible_ = false;
+    panel_info.label_.setCharacterSize(14);
+
+    panel_unit_name.visible_ = false;
+    panel_unit_faction.visible_ = false;
+    panel_unit_strength.visible_ = false;
 
     button_warrior.set_text("Warrior");
     button_armored.set_text("Armored warrior");
-    button_special.set_text("Special");
+    button_special.set_text("Special unit");
 }
 
 void Gui::render(sf::RenderWindow &window) const {
@@ -26,11 +38,22 @@ void Gui::render(sf::RenderWindow &window) const {
     panel_turn.render(window);
     panel_tiles.render(window);
     panel_coins.render(window);
+    panel_info.render(window);
+    panel_unit_name.render(window);
+    panel_unit_faction.render(window);
+    panel_unit_strength.render(window);
     button_turn.render(window);
 
     button_warrior.render(window);
     button_armored.render(window);
     button_special.render(window);
+
+    window.draw(cursor);
+}
+
+void Gui::update(sf::RenderWindow &window, const sf::Time &delta) {
+    const sf::Vector2i pos = sf::Mouse::getPosition(window);
+    cursor.setPosition(pos.x, pos.y);
 }
 
 void Gui::update(std::shared_ptr<ld::Player> player_1,
@@ -62,38 +85,64 @@ void Gui::set_positions() {
 
     button_turn.sprite_.setPosition(
         ld::config::get_screen_width() -
-            panel_turn.sprite_.getLocalBounds().width - margin,
-        2 * margin + panel_turn.sprite_.getLocalBounds().height);
+            button_turn.sprite_.getLocalBounds().width - margin,
+        2 * margin + button_turn.sprite_.getLocalBounds().height);
 
     panel_coins.sprite_.setPosition(
         ld::config::get_screen_width() -
             panel_coins.sprite_.getLocalBounds().width - margin,
-        5 * margin + panel_turn.sprite_.getLocalBounds().height * 2);
+        5 * margin + panel_coins.sprite_.getLocalBounds().height * 2);
+
+    panel_info.sprite_.setPosition(
+        ld::config::get_screen_width() / 2 -
+            panel_info.sprite_.getLocalBounds().width / 2,
+        margin);
 
     panel_tiles.sprite_.setPosition(
         ld::config::get_screen_width() -
             panel_tiles.sprite_.getLocalBounds().width - margin,
-        6 * margin + panel_turn.sprite_.getLocalBounds().height * 3);
+        6 * margin + panel_tiles.sprite_.getLocalBounds().height * 3);
 
     button_warrior.sprite_.setPosition(
         ld::config::get_screen_width() -
-            panel_tiles.sprite_.getLocalBounds().width - margin,
-        8 * margin + panel_turn.sprite_.getLocalBounds().height * 5);
+            button_warrior.sprite_.getLocalBounds().width - margin,
+        8 * margin + button_warrior.sprite_.getLocalBounds().height * 4);
 
     button_armored.sprite_.setPosition(
         ld::config::get_screen_width() -
-            panel_tiles.sprite_.getLocalBounds().width - margin,
-        9 * margin + panel_turn.sprite_.getLocalBounds().height * 6);
+            button_armored.sprite_.getLocalBounds().width - margin,
+        9 * margin + button_armored.sprite_.getLocalBounds().height * 5);
 
     button_special.sprite_.setPosition(
         ld::config::get_screen_width() -
-            panel_tiles.sprite_.getLocalBounds().width - margin,
-        10 * margin + panel_turn.sprite_.getLocalBounds().height * 7);
+            button_special.sprite_.getLocalBounds().width - margin,
+        10 * margin + button_special.sprite_.getLocalBounds().height * 6);
+
+    panel_unit_name.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_unit_name.sprite_.getLocalBounds().width - margin,
+        11 * margin + panel_unit_name.sprite_.getLocalBounds().height * 8);
+
+    panel_unit_faction.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_unit_faction.sprite_.getLocalBounds().width - margin,
+        12 * margin + panel_unit_faction.sprite_.getLocalBounds().height * 9);
+
+    panel_unit_strength.sprite_.setPosition(
+        ld::config::get_screen_width() -
+            panel_unit_strength.sprite_.getLocalBounds().width - margin,
+        13 * margin + panel_unit_strength.sprite_.getLocalBounds().height * 10);
 }
 
 ld::GuiAction Gui::handle_button_click(const sf::Vector2i &pos) {
     if (button_turn.check_click(pos)) {
         return ld::GuiAction::EndTurn;
+    } else if (button_warrior.check_click(pos)) {
+        return ld::GuiAction::AddWarriorUnit;
+    } else if (button_armored.check_click(pos)) {
+        return ld::GuiAction::AddArmoredUnit;
+    } else if (button_special.check_click(pos)) {
+        return ld::GuiAction::AddSpecialUnit;
     }
 
     return ld::GuiAction::NoAction;
@@ -129,7 +178,8 @@ void Button::set_text(const std::string &text) {
     const auto &bounds_label = label_.getLocalBounds();
 
     label_.setPosition(pos.x + bounds_sprite.width / 2 - bounds_label.width / 2,
-                       pos.y + bounds_label.height / 2);
+                       pos.y + bounds_sprite.height / 2 -
+                           bounds_label.height / 2 - 4);
 }
 
 void Button::render(sf::RenderWindow &window) const {

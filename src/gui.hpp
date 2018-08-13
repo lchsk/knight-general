@@ -45,17 +45,27 @@ class Gui {
     void update(std::shared_ptr<ld::Player> player_1,
                 std::shared_ptr<ld::Player> player_2, bool human_active);
 
+    void update(sf::RenderWindow &window, const sf::Time &delta);
+
     ld::GuiAction handle_button_click(const sf::Vector2i &pos);
 
     const std::shared_ptr<ld::Resources> resources_;
     ld::Button panel_turn;
     ld::Button panel_tiles;
     ld::Button panel_coins;
+    ld::Button panel_info;
+
+    ld::Button panel_unit_name;
+    ld::Button panel_unit_faction;
+    ld::Button panel_unit_strength;
+
     ld::Button button_turn;
 
     ld::Button button_warrior;
     ld::Button button_armored;
     ld::Button button_special;
+
+    sf::Sprite cursor;
 
   private:
     void set_positions();
