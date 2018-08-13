@@ -85,13 +85,19 @@ std::shared_ptr<ld::Unit> Unit::build_unit(const ld::Resources &resources,
         {ld::UnitType::Special, "special"},
     };
 
+    std::unordered_map<ld::UnitType, int> unit_strengths = {
+        {ld::UnitType::Warrior, 10},
+        {ld::UnitType::Armored, 15},
+        {ld::UnitType::Special, 25},
+    };
+
     const std::string filename =
         faction_names[faction] + "_" + faction_units[unit_type] + "_right.png";
 
     std::shared_ptr<ld::Unit> unit = std::make_shared<ld::Unit>(
         resources.get_texture(filename), faction, unit_type);
 
-    unit->set_strength(10);
+    unit->set_strength(unit_strengths[unit_type]);
 
     return unit;
 }
