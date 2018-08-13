@@ -164,12 +164,17 @@ void Map::add_game_resource() {
     ld::GameResourceType game_resource_type = types[random_id];
     std::string filename = resource_filenames[game_resource_type] + ".png";
 
+    int tries = 0;
+
     while (true) {
         assert(tiles.size() > 0);
 
         const int id = ld::randint(tiles.size() - 1);
 
         auto &tile = tiles[id];
+
+        if (tile.unit_)
+            continue;
 
         if (tile.get_type() != ld::TileType::Water and !tile.game_resource_) {
             auto game_resource = ld::GameResource::build(
@@ -179,6 +184,11 @@ void Map::add_game_resource() {
 
             break;
         }
+
+        tries++;
+
+        if (tries >= 100)
+            break;
     }
 }
 
@@ -333,8 +343,10 @@ void Map::move_enemy_unit(const std::shared_ptr<ld::Unit> &unit, ld::Tile &tile,
 }
 
 void Map::end_human_turn() {
-    switch_players();
-    play_ai();
+    if (is_human_active()) {
+        switch_players();
+        play_ai();
+    }
 }
 
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
@@ -454,6 +466,8 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
         return;
     }
 
+    int tries = 0;
+
     // Select a random tile
     while (true) {
         assert(tiles.size() > 0);
@@ -461,6 +475,9 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
         const int id = ld::randint(tiles.size() - 1);
 
         auto &tile = tiles[id];
+
+        if (tile.game_resource_)
+            continue;
 
         // Add a unit on the random tile
         if (tile.get_type() == player->tile_type_ and tile.unit_ == nullptr) {
@@ -472,6 +489,11 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
 
             break;
         }
+
+        tries++;
+
+        if (tries >= 100)
+            break;
     }
 }
 
