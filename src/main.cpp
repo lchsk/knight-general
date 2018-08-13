@@ -28,9 +28,12 @@ void handle_events(sf::RenderWindow &window, ld::Map &map) {
             window.close();
         else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             map.handle_left_mouse_click(pos);
-        } else if (event.type == sf::Event::KeyPressed and
-                   event.key.code == sf::Keyboard::Escape) {
-            window.close();
+        } else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape) {
+                window.close();
+            } else if (event.key.code == sf::Keyboard::Return) {
+                map.end_human_turn();
+            }
         }
     }
 }

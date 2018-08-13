@@ -314,6 +314,11 @@ void Map::move_enemy_unit(const std::shared_ptr<ld::Unit> &unit, ld::Tile &tile,
     tile.set_type(player_2_->tile_type_);
 }
 
+void Map::end_human_turn() {
+    switch_players();
+    play_ai();
+}
+
 void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
     if (!is_human_active()) {
@@ -323,8 +328,7 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
     ld::GuiAction action = gui_.handle_button_click(pos);
 
     if (action == ld::GuiAction::EndTurn) {
-        switch_players();
-        play_ai();
+        end_human_turn();
         return;
     }
 

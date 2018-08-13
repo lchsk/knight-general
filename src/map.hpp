@@ -89,6 +89,8 @@ class Map {
 
     void update(const sf::Time &delta);
 
+    void end_human_turn();
+
   private:
     void clean_up_units();
     void switch_players();
