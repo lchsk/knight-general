@@ -1,5 +1,5 @@
-# Ludum Dare 42 theme: Running out of space
-## Turn-based strategy, no name yet
+# Knight General
+## Turn-based strategy for Ludum Dare 42. Theme: Running out of space
 
 
 ## Dependencies
@@ -17,9 +17,12 @@ Install dependencies on Ubuntu:
 2. mkdir build && cp -r assets/ build/ && cd build
 3. cmake ..
 4. make -j
+5. ./knight-general
 ```
 
 ## Assets
+
+### Graphics
 
 - https://opengameart.org/content/medieval-rts-120 by Kenney (public domain)
 
@@ -36,6 +39,10 @@ Install dependencies on Ubuntu:
 ### Fonts
 
 - https://www.dafont.com/caviar-dreams.font by Lauren Thompson (100% free)
+
+## Version info
+
+`./knight-general --version`
 
 ## Screenshots
 

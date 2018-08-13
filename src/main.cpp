@@ -40,7 +40,20 @@ void handle_events(sf::RenderWindow &window, ld::Map &map) {
     }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    for (int i = 0; i < argc; i++) {
+        if (std::string(argv[i]) == "--version") {
+            std::cout << "Knight General v" << ld::config::VERSION << std::endl;
+            std::cout << "Author: Maciej Lechowski" << std::endl;
+            std::cout << "Made for Ludum Dare 42 in 72 hours. Theme: Running "
+                         "out of space"
+                      << std::endl;
+            std::cout << "https://github.com/lchsk/knight-general" << std::endl;
+            std::cout << "https://lchsk.com" << std::endl;
+            return 0;
+        }
+    }
+
     sf::RenderWindow window(sf::VideoMode(ld::config::get_screen_width(),
                                           ld::config::get_screen_height()),
                             "knights");
