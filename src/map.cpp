@@ -7,9 +7,9 @@ Map::Map(const ld::MapDefinition &map_definition,
          const std::shared_ptr<ld::Resources> &resources)
     : gui_(resources),
       player_1_(std::make_shared<ld::Player>(
-          ld::PlayerType::Human, ld::Faction::Skeleton, ld::TileType::Earth)),
+          ld::PlayerType::Human, ld::Faction::Knight, ld::TileType::Grass)),
       player_2_(std::make_shared<ld::Player>(
-          ld::PlayerType::AI, ld::Faction::Knight, ld::TileType::Grass)),
+          ld::PlayerType::AI, ld::Faction::Skeleton, ld::TileType::Earth)),
       active_player_(player_2_), resources(resources) {
 
     const sf::Texture &texture_crosshair =
@@ -89,12 +89,23 @@ void Map::clean_up_units() {
                 units.end());
 }
 
+void Map::reset_human_selection() {
+    for (auto &unit : units) {
+        unit->selected_ = false;
+    }
+
+    player_1_->selected_unit_ = nullptr;
+}
+
 void Map::switch_players() {
     // Reset
     for (auto &unit : units) {
         unit->already_moved_ = false;
         unit->selected_ = false;
     }
+    gui_.panel_unit_name.visible_ = false;
+    gui_.panel_unit_faction.visible_ = false;
+    gui_.panel_unit_strength.visible_ = false;
 
     active_player_ = is_human_active() ? player_2_ : player_1_;
 
@@ -106,11 +117,18 @@ void Map::switch_players() {
         add_game_resource();
 
     update_gui();
+
+    if (player_1_->tiles_ == 0) {
+        show_message("You lost!");
+    }
+
+    if (player_2_->tiles_ == 0) {
+        show_message("You won!");
+    }
 }
 
 void Map::update_gui() {
-    gui_.update(player_1_, player_2_,
-                active_player_->player_type_ == ld::PlayerType::Human);
+    gui_.update(player_1_, player_2_, active_player_->is_human());
 }
 
 bool Map::check_free_tile_available(bool check_for_units,
@@ -213,7 +231,13 @@ void Map::update_active_player_tiles() {
 void Map::land_payout() {
 
     update_active_player_tiles();
-    active_player_->coins_ += std::ceil(active_player_->tiles_ / 4);
+    const int new_coins = std::ceil(active_player_->tiles_ / 4);
+    active_player_->coins_ += new_coins;
+
+    if (active_player_->is_human()) {
+        show_message("Received " + std::to_string(new_coins) +
+                     " coins for land");
+    }
 }
 
 void Map::play_ai() {
@@ -221,6 +245,11 @@ void Map::play_ai() {
     for (auto &unit : units) {
         if (unit->get_faction() == player_1_->faction_) {
             // Skip Human units
+            continue;
+        }
+
+        if (ld::randint(3) == 0) {
+            // Skip unit's turn to make it easier for human player
             continue;
         }
 
@@ -253,6 +282,7 @@ void Map::play_ai() {
                     moved = true;
                     break;
                 } else if (unit->can_fight(tile.unit_)) {
+                    show_message("Your unit is fighting");
                     unit->fight(tile.unit_);
 
                     moved = true;
@@ -321,6 +351,12 @@ void Map::play_ai() {
 
 bool Map::is_human_active() const { return active_player_ == player_1_; }
 
+void Map::show_message(const std::string &text) {
+    gui_.panel_info.set_text(text);
+    gui_.panel_info.visible_ = true;
+    gui_timer_ = sf::seconds(0);
+}
+
 void Map::move_enemy_unit(const std::shared_ptr<ld::Unit> &unit, ld::Tile &tile,
                           ld::Tile *unit_tile,
                           const std::string &texture_name) {
@@ -377,12 +413,21 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
     auto &selected_tile =
         tiles[ld::map_coords::coords_to_tile_id(tile_row, tile_col)];
 
+    if (selected_tile.get_type() == ld::TileType::Water) {
+        reset_human_selection();
+        gui_.panel_unit_name.visible_ = false;
+        gui_.panel_unit_faction.visible_ = false;
+        gui_.panel_unit_strength.visible_ = false;
+        return;
+    }
+
     if (player_1_->selected_unit_ and
         player_1_->selected_unit_->can_fight(selected_tile.unit_)) {
         // Fight
         ld::Tile *unit_tile = find_unit_tile(player_1_->selected_unit_);
 
         if (is_valid_move(selected_tile, unit_tile)) {
+            show_message("Your unit is fighting");
             player_1_->selected_unit_->fight(selected_tile.unit_);
             player_1_->selected_unit_->already_moved_ = true;
             clean_up_units();
@@ -416,8 +461,14 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
                 // Check if there's a resource on this tile
                 if (selected_tile.game_resource_) {
-                    player_1_->coins_ +=
+                    const std::string name =
+                        selected_tile.game_resource_->get_string();
+                    const int coins =
                         selected_tile.game_resource_->get_resource_payout();
+                    show_message("Collected " + name + " for " +
+                                 std::to_string(coins) + " coins");
+                    player_1_->coins_ += coins;
+
                     selected_tile.game_resource_ = nullptr;
                 }
 
@@ -431,10 +482,23 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
                 update_active_player_tiles();
                 update_gui();
             } else {
-                std::cout << "Invalid move\n";
+                show_message("Invalid move");
             }
         }
     } else {
+        // Show unit info box
+        if (selected_tile.unit_) {
+            gui_.panel_unit_name.visible_ = true;
+            gui_.panel_unit_name.set_text(selected_tile.unit_->get_unit_name());
+            gui_.panel_unit_faction.visible_ = true;
+            gui_.panel_unit_faction.set_text(
+                selected_tile.unit_->get_unit_faction());
+            gui_.panel_unit_strength.visible_ = true;
+            gui_.panel_unit_strength.set_text(
+                "Strength: " +
+                std::to_string(selected_tile.unit_->get_strength()));
+        }
+
         // Select a unit
         if (!selected_tile.unit_->already_moved_ and
             selected_tile.unit_->get_faction() == player_1_->faction_) {
@@ -469,13 +533,16 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
     std::unordered_map<ld::UnitType, int> unit_costs = {
         {ld::UnitType::Warrior, 80},
         {ld::UnitType::Armored, 120},
-        {ld::UnitType::Special, 220},
+        {ld::UnitType::Special, 180},
     };
 
     const int cost = unit_costs[unit_type];
     const int coins = player->coins_;
 
     if (cost > coins) {
+        if (player->is_human()) {
+            show_message("Cannot afford this unit");
+        }
         return;
     }
 
@@ -507,6 +574,8 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
             tile.unit_ = unit;
             unit->sprite.setPosition(tile.sprite.getPosition());
             player->coins_ -= cost;
+            update_active_player_tiles();
+            update_gui();
 
             break;
         }
@@ -518,7 +587,15 @@ void Map::add_new_unit(std::shared_ptr<ld::Player> &player,
     }
 }
 
-void Map::update(const sf::Time &delta) {
+void Map::update(sf::RenderWindow &window, const sf::Time &delta) {
+    gui_.update(window, delta);
+    gui_timer_ += delta;
+
+    if (gui_.panel_info.visible_ and gui_timer_.asSeconds() >= 2) {
+        gui_.panel_info.visible_ = false;
+        gui_timer_ = sf::seconds(0);
+    }
+
     if (active_player_->player_type_ == ld::PlayerType::AI) {
         ai_timer_ += delta;
 

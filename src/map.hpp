@@ -16,16 +16,16 @@ using MapDefinition =
     std::array<std::array<unsigned, ld::config::COLS>, ld::config::ROWS>;
 
 const MapDefinition map_1 = {{
-    {4, 4, 4, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-    {0, 4, 4, 0, 0, 0, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4},
+    {4, 4, 4, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
+    {0, 4, 4, 0, 0, 0, 0, 4, 4, 3, 2, 4, 4, 4, 4, 4},
     {0, 1, 0, 0, 0, 1, 0, 3, 2, 2, 2, 3, 4, 4, 4, 4},
-    {0, 1, 1, 1, 0, 1, 0, 2, 3, 3, 2, 2, 4, 4, 4, 4},
-    {0, 1, 1, 1, 1, 1, 3, 3, 2, 3, 2, 2, 2, 4, 4, 4},
+    {0, 1, 1, 1, 0, 1, 3, 2, 3, 3, 2, 2, 3, 4, 4, 4},
+    {0, 1, 1, 1, 1, 3, 3, 3, 2, 3, 2, 2, 2, 4, 4, 4},
     {0, 1, 1, 0, 0, 0, 3, 2, 2, 2, 3, 3, 3, 4, 4, 4},
     {0, 0, 0, 0, 1, 0, 2, 3, 2, 2, 2, 3, 4, 4, 4, 4},
-    {0, 0, 1, 0, 1, 1, 2, 3, 2, 3, 2, 3, 4, 4, 4, 4},
-    {5, 0, 1, 0, 0, 0, 4, 4, 3, 3, 2, 3, 4, 4, 4, 4},
-    {4, 4, 0, 1, 0, 4, 4, 4, 3, 2, 2, 4, 4, 4, 4, 4},
+    {0, 0, 1, 0, 1, 2, 2, 3, 2, 3, 2, 3, 4, 4, 4, 4},
+    {4, 0, 1, 0, 0, 2, 4, 4, 3, 3, 2, 3, 4, 4, 4, 4},
+    {4, 4, 0, 0, 0, 4, 4, 4, 3, 2, 2, 4, 4, 4, 4, 4},
 
 }};
 
@@ -87,7 +87,7 @@ class Map {
 
     void handle_left_mouse_click(const sf::Vector2i &pos);
 
-    void update(const sf::Time &delta);
+    void update(sf::RenderWindow &window, const sf::Time &delta);
 
     void end_human_turn();
 
@@ -105,7 +105,12 @@ class Map {
     void move_enemy_unit(const std::shared_ptr<ld::Unit> &unit, ld::Tile &tile,
                          ld::Tile *unit_tile, const std::string &texture_name);
 
+    void show_message(const std::string &text);
+    void reset_human_selection();
+
     sf::Time ai_timer_;
+    sf::Time gui_timer_;
+    sf::Time fight_timer_;
 
     ld::Gui gui_;
 
