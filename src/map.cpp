@@ -297,6 +297,24 @@ void Map::play_ai() {
     }
 
     clean_up_units();
+
+    const int coins = active_player_->coins_;
+    const int random = ld::randint(3);
+
+    const int cost_special = 200;
+    const int cost_armored = 120;
+    const int cost_warrior = 80;
+
+    if (coins >= cost_special) {
+        add_new_unit(player_2_, ld::UnitType::Special);
+        active_player_->coins_ -= cost_special;
+    } else if (coins >= cost_armored and random == 0) {
+        add_new_unit(player_2_, ld::UnitType::Armored);
+        active_player_->coins_ -= cost_armored;
+    } else if (coins >= cost_warrior and random == 1) {
+        add_new_unit(player_2_, ld::UnitType::Warrior);
+        active_player_->coins_ -= cost_warrior;
+    }
 }
 
 bool Map::is_human_active() const { return active_player_ == player_1_; }
