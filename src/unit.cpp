@@ -23,6 +23,9 @@ ld::UnitType Unit::get_type() const { return unit_type_; }
 ld::Faction Unit::get_faction() const { return unit_faction_; }
 
 bool Unit::can_fight(const std::shared_ptr<ld::Unit> &other_unit) const {
+    if (already_moved_)
+        return false;
+
     return (other_unit and this != other_unit.get() and
             get_faction() != other_unit->get_faction());
 }
@@ -77,7 +80,9 @@ std::shared_ptr<ld::Unit> Unit::build_unit(const ld::Resources &resources,
     };
 
     std::unordered_map<ld::UnitType, std::string> faction_units = {
+        {ld::UnitType::Warrior, "warrior"},
         {ld::UnitType::Armored, "armored"},
+        {ld::UnitType::Special, "special"},
     };
 
     const std::string filename =

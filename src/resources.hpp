@@ -30,7 +30,11 @@ const std::vector<ld::TileConfig> TILES = {
 
 const std::vector<std::string> files = {
     // Units
-    "skeleton_armored_right.png", "knight_armored_right.png",
+    "skeleton_warrior_right.png", "skeleton_armored_right.png",
+    "skeleton_special_right.png",
+
+    "knight_warrior_right.png", "knight_armored_right.png",
+    "knight_special_right.png",
 
     // UI
     "button_brown.png", "button_brown_pressed.png", "crosshair.png",

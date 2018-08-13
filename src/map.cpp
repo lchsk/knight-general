@@ -33,8 +33,14 @@ Map::Map(const ld::MapDefinition &map_definition,
         }
     }
 
+    add_new_unit(player_1_, ld::UnitType::Warrior);
+    add_new_unit(player_2_, ld::UnitType::Warrior);
+
     add_new_unit(player_1_, ld::UnitType::Armored);
     add_new_unit(player_2_, ld::UnitType::Armored);
+
+    add_new_unit(player_1_, ld::UnitType::Special);
+    add_new_unit(player_2_, ld::UnitType::Special);
 
     switch_players();
 }
@@ -223,6 +229,8 @@ void Map::play_ai() {
             }
         }
 
+        bool moved = false;
+
         // Collect a resource or attack
 
         for (auto &tile : tiles) {
@@ -232,13 +240,19 @@ void Map::play_ai() {
                         tile.game_resource_->get_resource_payout();
                     player_2_->coins_ += payout;
                     move_enemy_unit(unit, tile, unit_tile, texture_name);
-                    return;
+                    moved = true;
+                    break;
                 } else if (unit->can_fight(tile.unit_)) {
                     unit->fight(tile.unit_);
-                    clean_up_units();
-                    return;
+
+                    moved = true;
+                    break;
                 }
             }
+        }
+
+        if (moved) {
+            continue;
         }
 
         // Find optimal move
@@ -275,12 +289,14 @@ void Map::play_ai() {
 
                     if (dist < shortest_dist) {
                         move_enemy_unit(unit, tile, unit_tile, texture_name);
-                        return;
+                        break;
                     }
                 }
             }
         }
     }
+
+    clean_up_units();
 }
 
 bool Map::is_human_active() const { return active_player_ == player_1_; }
@@ -380,6 +396,9 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
         // Select a unit
         if (!selected_tile.unit_->already_moved_ and
             selected_tile.unit_->get_faction() == player_1_->faction_) {
+            if (player_1_->selected_unit_) {
+                player_1_->selected_unit_->selected_ = false;
+            }
             crosshair.setPosition(selected_tile.unit_->sprite.getPosition());
             selected_tile.unit_->selected_ = true;
             player_1_->selected_unit_ = selected_tile.unit_;
@@ -389,10 +408,18 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
 
 bool Map::is_valid_move(const ld::Tile &selected_tile,
                         const ld::Tile *unit_tile) const {
+
+    if (selected_tile.unit_ and selected_tile.unit_->already_moved_)
+        return false;
+
     const bool neighbor_tiles =
         ld::map_coords::neighbor_tiles(selected_tile, unit_tile);
 
-    return neighbor_tiles and selected_tile.get_type() != ld::TileType::Water;
+    return neighbor_tiles and
+           selected_tile.get_type() != ld::TileType::Water and
+           (!selected_tile.unit_ or (selected_tile.unit_ and
+                                     selected_tile.unit_->get_faction() !=
+                                         unit_tile->unit_->get_faction()));
 }
 
 void Map::add_new_unit(std::shared_ptr<ld::Player> &player,

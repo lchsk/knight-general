@@ -11,7 +11,9 @@
 namespace ld {
 
 enum class UnitType {
+    Warrior,
     Armored,
+    Special,
 };
 
 class Unit {
