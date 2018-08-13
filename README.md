@@ -14,9 +14,26 @@ Knight General is inspired by classic turn-based strategy games. The aim of the 
 - difficult AI opponent
 - several types of resources (gold, stone, timber, trees) which can be collected and sold to receive coins
 
-## Dependencies
+## Installation
+
+1. Make sure you have SFML library installed: on Ubuntu `sudo apt install libsfml-dev`
+
+2. Download DEB or ZIP package.
+
+3. Install DEB package: `sudo apt install ./knight-general-0.1.0-Linux.deb`
+
+4. Go to directory with `knight-general` executable (possibly `/usr/games`), and run `./knight-general`
+
+5. If you're using the ZIP archive, unzip it, then find `knight-general` executable and run it.
+
+## Requirements
+
+Tested on Ubuntu 17.10 but it should be easy to build on other free systems and probably on Mac/Windows as well.
+
+### Dependencies
 
 - SFML (tested with v2.4.2)
+- modern C++ compiler, supporting at least C++14
 
 ## Building from source
 
@@ -26,7 +43,7 @@ Install dependencies on Ubuntu:
 
 ```
 1. Clone the repo
-2. mkdir build && cp -r assets/ build/ && cd build
+2. mkdir build && cp -r knight_general_assets/ build/ && cd build
 3. cmake ..
 4. make -j
 5. ./knight-general
@@ -46,7 +63,7 @@ Install dependencies on Ubuntu:
 
 ### Music
 
-- https://opengameart.org/content/adventure-begins by bart (GPL 3.0**
+- https://opengameart.org/content/adventure-begins by bart (GPL 3.0)
 
 ### Fonts
 

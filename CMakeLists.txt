@@ -18,6 +18,22 @@ set(EXECUTABLE_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -pedantic")
 
+# cpack
+
+set(CPACK_PACKAGE_CONTACT "lchsk.com")
+set(CPACK_GENERATOR "DEB;ZIP;")
+set(CPACK_PACKAGE_DESCRIPTION, "Turn-based strategy game")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+
+# deb stuff
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://lchsk.com")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "lchsk.com")
+
+include(CPack)
+
+# end cpack
+
 file(GLOB SOURCES "src/*.hpp" "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -28,3 +44,6 @@ message(STATUS "SFML_VERSION: ${SFML_VERSION}")
 
 include_directories(${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+
+install(TARGETS knight-general DESTINATION games)
+install(DIRECTORY knight_general_assets DESTINATION games)
