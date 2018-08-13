@@ -13,6 +13,29 @@ void GameResource::render(sf::RenderWindow &window) const {
     window.draw(sprite_);
 }
 
+const std::string GameResource::get_string() const {
+    switch (game_resource_type_) {
+    case GameResourceType::Gold:
+        return "gold";
+    case GameResourceType::Timber:
+        return "timber";
+    case GameResourceType::Tree_1:
+        return "tree";
+    case GameResourceType::Tree_2:
+        return "tree";
+    case GameResourceType::Stone_1:
+        return "stone";
+    case GameResourceType::Stone_2:
+        return "stone";
+    case GameResourceType::Stone_3:
+        return "stone";
+    case GameResourceType::Stone_4:
+        return "stone";
+    }
+
+    return "";
+}
+
 int GameResource::get_resource_payout() const {
     switch (game_resource_type_) {
     case GameResourceType::Gold:
