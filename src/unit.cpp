@@ -31,15 +31,7 @@ bool Unit::can_fight(const std::shared_ptr<ld::Unit> &other_unit) const {
 }
 
 void Unit::fight(std::shared_ptr<ld::Unit> &unit) {
-    const int diff = std::abs(unit->get_strength() - get_strength());
-    int randomized_diff = ld::randint(diff);
-
-    if (randomized_diff == 0)
-        randomized_diff = ld::randint(3, 2);
-
-    randomized_diff = std::max(2, randomized_diff);
-
-    const int random_factor = std::ceil(std::log(randomized_diff * 2));
+    const int random_factor = ld::randint(4, 2);
     const int lucky_player = ld::randint(1);
 
     if (lucky_player) {
@@ -65,6 +57,33 @@ void Unit::fight(std::shared_ptr<ld::Unit> &unit) {
 
     std::cout << "Result of a fight: " << strength_ << " : "
               << unit->get_strength() << std::endl;
+}
+
+const std::string Unit::get_unit_name() const {
+    switch (get_type()) {
+    case ld::UnitType::Warrior:
+        return "Warrior";
+    case ld::UnitType::Armored:
+        return "Armored warrior";
+    case ld::UnitType::Special:
+        if (get_faction() == ld::Faction::Skeleton) {
+            return "Wizard";
+        } else if (get_faction() == ld::Faction::Knight) {
+            return "Knight";
+        }
+    }
+
+    return "";
+}
+
+const std::string Unit::get_unit_faction() const {
+    if (get_faction() == ld::Faction::Skeleton) {
+        return "Skeletons";
+    } else if (get_faction() == ld::Faction::Knight) {
+        return "Knights";
+    }
+
+    return "";
 }
 
 // -------------------------------------------

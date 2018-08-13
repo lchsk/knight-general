@@ -38,6 +38,9 @@ class Unit {
     bool selected_;
     bool already_moved_;
 
+    const std::string get_unit_name() const;
+    const std::string get_unit_faction() const;
+
     static std::shared_ptr<ld::Unit> build_unit(const ld::Resources &resources,
                                                 ld::Faction faction,
                                                 ld::UnitType unit_type);
