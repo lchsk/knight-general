@@ -3,6 +3,8 @@
 
 Gameplay video: https://www.youtube.com/watch?v=wPX_rOMkLKs
 
+Ludum Dare 42 entry: https://ldjam.com/events/ludum-dare/42/knight-general
+
 ![](knight_general.png "Knight General")
 
 ## Description
