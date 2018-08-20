@@ -2,6 +2,12 @@
 
 #include <iostream>
 
+#if SFML_VERSION_MINOR >= 4
+#define SFML_SET_COLOR setFillColor
+#else
+#define SFML_SET_COLOR setColor
+#endif
+
 namespace ld {
 
 Gui::Gui(const std::shared_ptr<ld::Resources> &resources)
@@ -155,7 +161,7 @@ Button::Button(const std::shared_ptr<ld::Resources> &resources,
     sprite_ = sf::Sprite(resources_->get_texture(resource_name));
     label_.setFont(resources->basic_font_);
     label_.setCharacterSize(20);
-    label_.setFillColor(sf::Color::White);
+    label_.SFML_SET_COLOR(sf::Color::White);
 }
 
 bool Button::check_click(const sf::Vector2i &pos) const {
