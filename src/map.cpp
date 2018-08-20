@@ -410,8 +410,14 @@ void Map::handle_left_mouse_click(const sf::Vector2i &pos) {
     const int tile_row = ld::map_coords::px2tile_row(pos.y);
 
     // Tile that was just clicked on
-    auto &selected_tile =
-        tiles[ld::map_coords::coords_to_tile_id(tile_row, tile_col)];
+    const int tile_id = ld::map_coords::coords_to_tile_id(tile_row, tile_col);
+
+    if (tile_id >= ld::config::ROWS * ld::config::COLS) {
+        // Mouse click outside of game window
+        return;
+    }
+
+    auto &selected_tile = tiles[tile_id];
 
     if (selected_tile.get_type() == ld::TileType::Water) {
         reset_human_selection();
